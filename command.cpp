@@ -21,7 +21,7 @@ ReplaceCommand::ReplaceCommand (char a, char b): A(a), B(b) {}
 std::string ReplaceCommand::apply(const std::string &in_s) {
     std::string s(in_s);
     for (unsigned i = 0; i < s.length(); ++i)
-        if (s[i] = A)
+        if (s[i] == A)
             s[i] = B;
     return s;
 }

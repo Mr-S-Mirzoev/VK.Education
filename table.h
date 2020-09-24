@@ -12,14 +12,14 @@ class Table {
 public:
     void append(std::string &s) {
         int i = 0;
-        auto spl = split(s, "\t");
+        auto spl = split(s);
         if (!N)
-            N = v.size();
+            N = spl.size();
+
+        if (spl.size() != N)
+            throw std::logic_error("Line has diff No. of columns than previous");
         else
-            if (spl.size() != N)
-                throw std::logic_error("Line has diff No. of columns than previous");
-            else
-                v.push_back(spl);
+            v.push_back(spl);
     }
 
     std::size_t height () const {
@@ -37,8 +37,8 @@ public:
     friend std::ostream& operator<< (std::ostream &out, Table &t) {
         for (auto &ln : t.v) {
             for (auto &s : ln)
-                std::cout << s << '\t';
-            std::cout << std::endl;
+                out << s << "\t";
+            out << std::endl;
         }
         return out;
     }

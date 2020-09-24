@@ -15,25 +15,30 @@ int main (int argc, char *argv[]) {
     std::ifstream infile(argv[1]);   
     std::string line;
     Table t;
-    while (std::getline(infile, line)) {
+    while (std::getline(infile, line))
         t.append(line);
-    }
+
+    std::cout << "Initial state:" << std::endl;
+    std::cout << t;
+    
     while (std::cin >> line) {
         unsigned strlen = line.length();
+
         std::size_t semicol_pos = line.find(':');
         if (semicol_pos == std::string::npos)
             throw std::logic_error("Wrong format");
+
         int N = std::stoi(line.substr(0, semicol_pos));
         Command *com;
-        if (line.substr(strlen - 2) == ":u") {
+
+        if (line.substr(strlen - 2) == ":u")
             com = new ToLowerCommand;
-        } else if (line.substr(strlen - 2) == ":U") {
+        else if (line.substr(strlen - 2) == ":U")
             com = new ToUpperCommand;
-        } else if (semicol_pos == strlen - 3) {
+        else if (semicol_pos == strlen - 3)
             com = new ReplaceCommand(line[strlen - 2], line[strlen - 1]);
-        } else {
+        else
             throw std::logic_error ("Unknown command");
-        }
         
         ThreadPool pool(4);
         std::vector< std::future<std::string> > results;
@@ -53,5 +58,7 @@ int main (int argc, char *argv[]) {
             i++;
         }
     }
+
+    std::cout << std::endl << "Final state" << std::endl;
     std::cout << t;
 }
