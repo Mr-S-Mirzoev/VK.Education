@@ -2,6 +2,8 @@
 
 Mail.ru Technosphere task for C++ course
 
+[Test Image 4](https://github.com/Mr-S-Mirzoev/TechnoSphere-Task/task.png)
+
 # Example of work
 
     Initial state:
