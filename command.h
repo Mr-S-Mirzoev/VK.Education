@@ -2,6 +2,7 @@
 #define COMMAND_H
 
 #include <string>
+#include <stdexcept>
 
 class Command {
 public:
