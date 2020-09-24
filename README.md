@@ -2,7 +2,7 @@
 
 Mail.ru Technosphere task for C++ course
 
-![Test Image 4]("task.png")
+![Test Image 4](task.png)
 
 # Example of work
 
