@@ -52,7 +52,6 @@ int main (int argc, char *argv[]) {
             t.set(result.get(), i, N);
             i++;
         }
-        
-        return 0;
     }
+    std::cout << t;
 }

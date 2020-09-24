@@ -33,6 +33,15 @@ public:
     void set (const std::string &s, int i, int N) {
         v[i][N] = s;
     }
+
+    friend std::ostream& operator<< (std::ostream &out, Table &t) {
+        for (auto &ln : t.v) {
+            for (auto &s : ln)
+                std::cout << s << '\t';
+            std::cout << std::endl;
+        }
+        return out;
+    }
 };
 
 #endif
