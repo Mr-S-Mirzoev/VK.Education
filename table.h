@@ -22,6 +22,17 @@ public:
                 v.push_back(spl);
     }
 
+    std::size_t height () const {
+        return v.size();
+    }
+
+    std::string get(int i, int N) {
+        return v[i][N];
+    }
+
+    void set (const std::string &s, int i, int N) {
+        v[i][N] = s;
+    }
 };
 
 #endif

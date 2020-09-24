@@ -5,7 +5,7 @@
 
 class Command {
 public:
-    virtual std::string apply(const std::string &s);
+    virtual std::string apply(const std::string &s) { throw std::runtime_error ("Wrong virtuality"); };
 };
 
 class ToUpperCommand: public Command {
