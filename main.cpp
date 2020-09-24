@@ -20,17 +20,39 @@ int main (int argc, char *argv[]) {
     }
     while (std::cin >> line) {
         unsigned strlen = line.length();
-        int N = std::stoi(line.substr(0, line.find(':')));
-        if (line.find(':') == std::string::npos)
+        std::size_t semicol_pos = line.find(':');
+        if (semicol_pos == std::string::npos)
+            throw std::logic_error("Wrong format");
+        int N = std::stoi(line.substr(0, semicol_pos));
         Command *com;
         if (line.substr(strlen - 2) == ":u") {
             com = new ToLowerCommand;
         } else if (line.substr(strlen - 2) == ":U") {
             com = new ToUpperCommand;
+        } else if (semicol_pos == strlen - 3) {
+            com = new ReplaceCommand(line[strlen - 2], line[strlen - 1]);
         } else {
-            throw std::logic_error("Unknown command");
+            throw std::logic_error ("Unknown command");
         }
         
+        ThreadPool pool(4);
+        std::vector< std::future<std::string> > results;
 
+        for(int i = 0; i < t.height(); ++i) {
+            auto s = t.get(i, N);
+            results.emplace_back(
+                pool.enqueue([s, com] {
+                    return com->apply(s);
+                })
+            );
+        }
+
+        int i = 0;
+        for(auto && result: results) {
+            t.set(result.get(), i, N);
+            i++;
+        }
+        
+        return 0;
     }
 }
