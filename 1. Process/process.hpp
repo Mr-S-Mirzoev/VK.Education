@@ -1,9 +1,13 @@
 #ifndef PROCESS_H
 #define PROCESS_H
 
+#include <string>
+#include <unistd.h>
+
 class Process
 {
     pid_t pid;
+    static std::string exec_name(const std::string& full_path);
 public:
     explicit Process(const std::string& path);
     ~Process();
