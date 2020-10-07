@@ -2,31 +2,29 @@
 #define PROCESS_H
 
 #include <string>
-#include <unistd.h>
-#include <fcntl.h>
+#include <vector>
 #include <iostream>
-#include <sys/wait.h>
+
+#include <fcntl.h>
 #include <signal.h>
+#include <sys/wait.h>
+#include <unistd.h>
 
 //#define DEBUG
 
-void sig_handler(int signal) {
-    exit(0);
-}
+void sig_handler(int signal);
 
 class Process
 {
     pid_t _pid;
     bool _noexec = false;
-
-    static std::string exec_name(const std::string& full_path) {
-        std::size_t pos = full_path.rfind('/');
-        if (pos == std::string::npos)
-            return full_path;
-        return full_path.substr(pos);
-    }
+    int fd1[2];
+    int fd2[2];
+    
+    static std::vector<char*> arg_list(const std::string &name, const std::vector <std::string>& args);
+    static std::string exec_name(const std::string& full_path);
 public:
-    explicit Process(const std::string& path);
+    explicit Process(const std::string& path, const std::vector <std::string>& args);
     ~Process();
 
     size_t write(const void* data, size_t len);
@@ -37,6 +35,8 @@ public:
     void closeStdin();
 
     void close();
+
+    bool exec_failed() const;
 };
 
 #endif
