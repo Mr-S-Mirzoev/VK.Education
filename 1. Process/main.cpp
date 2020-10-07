@@ -12,12 +12,8 @@ int main(int argc, char *argv[]) {
         args.push_back("-haltr");
     }
     Process ps(path, args);
-/*    std::string input;  // FOR CAT
-    std::cin >> input;
-    ps.write(input.data(), input.length()); */
     std::string s(1000, '\0'); 
     ps.read(s.data(), 1000);
-    std::cout << s << std::endl;
-    std::cout << ps.exec_failed() << std::endl;
+    std::cout << s;
     return 0;
 }
