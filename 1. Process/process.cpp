@@ -59,11 +59,16 @@ Process::Process(const std::string& path, const std::vector <std::string>& args)
     std::cerr << "Status: " << status << std::endl;
 #endif
     _noexec = (pid_result != 0);
+    ::close(verif_fd[0]);
 }
 
 Process::~Process() {
     if (_pid) {
         int status;
+        ::close(fd1[0]);
+        ::close(fd2[1]);
+        ::close(fd1[1]);
+        ::close(fd2[0]);
         waitpid(_pid, &status, 0);
 #ifdef DEBUG
         std::cerr << WEXITSTATUS(status) << std::endl;
@@ -87,8 +92,10 @@ void Process::closeStdin() {
         ::close(0);
     else {
 #ifdef DEBUG
-        std::cerr << "Trying to kill softly from child" << std::endl;
+        std::cerr << "Trying to close Stdin from parent" << std::endl;
 #endif
+        close();
+        waitpid(_pid, NULL, 0);
         exit(1);
     }
 }
