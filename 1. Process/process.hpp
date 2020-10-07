@@ -37,6 +37,7 @@ public:
     void close();
 
     bool exec_failed() const;
+    int return_status() const;
 };
 
 #endif

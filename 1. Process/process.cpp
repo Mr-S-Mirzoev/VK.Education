@@ -58,7 +58,7 @@ Process::Process(const std::string& path, const std::vector <std::string>& args)
     std::cerr << "PID: " << pid_result << std::endl;
     std::cerr << "Status: " << status << std::endl;
 #endif
-    _noexec = (pid_result == 0);
+    _noexec = (pid_result != 0);
 }
 
 Process::~Process() {
@@ -140,4 +140,17 @@ void Process::writeExact(const void* data, size_t len) {
 
 bool Process::exec_failed() const {
     return _noexec;
+}
+
+int Process::return_status() const {
+    if (!_noexec) {
+        int status;
+        waitpid(_pid, &status, WNOHANG);
+        if (WIFEXITED(status))
+            return WEXITSTATUS(status);
+        else
+            return 0;
+        
+    }
+    return -1;
 }

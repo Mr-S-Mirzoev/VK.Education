@@ -42,4 +42,6 @@
 
 # Local History for Visual Studio Code
 .history/
-1. Process/process
+
+# CMake build
+1. Process/build
