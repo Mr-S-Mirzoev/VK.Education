@@ -10,7 +10,6 @@ int main() {
         args.push_back("-haltr");
 
         Process ps(path, args);
-        std::cout << "Exec failed: " << ps.exec_failed() << std::endl;
         std::cout << "Exec return status: " << ps.return_status() << std::endl;
         ps.close();
     })
@@ -23,7 +22,6 @@ int main() {
         args.push_back("-haltr");
 
         Process ps(path, args);
-        std::cout << "Exec failed: " << ps.exec_failed() << std::endl;
         std::cout << "Exec return status: " << ps.return_status() << std::endl;
         ps.close();
     })
