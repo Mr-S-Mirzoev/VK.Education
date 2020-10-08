@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "process.hpp"
 
 int main(int argc, char *argv[]) {
