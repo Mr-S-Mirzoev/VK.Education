@@ -21,7 +21,7 @@ std::string exec_name(const std::string& full_path) {
     std::size_t pos = full_path.rfind('/');
     if (pos == std::string::npos)
         return full_path;
-    return full_path.substr(pos);
+    return full_path.substr(pos + 1);
 }
 
 
@@ -211,6 +211,7 @@ void Process::writeExact(const void* data, size_t len) {
     while (offset < len) {
         size_t bytes_written = write(sized_data + offset, len);
 #ifdef DEBUG
+        std::cerr << "Data: " << sized_data << std::endl;
         std::cerr << "Bytes written: " << bytes_written << std::endl;
 #endif
         offset += bytes_written;

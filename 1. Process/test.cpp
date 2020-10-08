@@ -1,6 +1,8 @@
 #include "process.hpp"
 #include "test.h"
 
+#include <fstream>
+
 int main() {
     TEST("Unknown short name", 0, {
         std::string path;
@@ -73,4 +75,19 @@ int main() {
         }
         ps.close();
     }) 
+
+    TEST("Deinitialization of file descriptors after close", 5, {
+        std::string path;
+        std::vector <std::string> args;
+
+        path = "/bin/cat";        
+        Process proc(path, args);
+        
+        proc.close();
+        std::ofstream f1{"tmp"};
+        std::ofstream f2{"tmp"};
+
+        std::string buf{"Unexpected behaviour"};
+        proc.writeExact(buf.c_str(), buf.size());
+    })
 }
