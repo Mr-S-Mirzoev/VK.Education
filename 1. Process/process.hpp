@@ -6,7 +6,7 @@
 #include <sys/wait.h>
 #include <vector>
 
-//#define DEBUG
+#define DEBUG
 #define CHILD(pid) (pid == 0)
 #define POSIX_ERROR(ret_val) (ret_val < 0)
 
