@@ -66,7 +66,7 @@ Process::Process(const std::string& path, const std::vector <std::string>& args)
     }
 
 #ifdef DEBUG
-    std::cerr << path.c_str() << " " << Process::exec_name(path).c_str() << std::endl;
+    std::cerr << path.c_str() << " " << exec_name(path).c_str() << std::endl;
 #endif 
     _pid = fork();
 
@@ -135,6 +135,7 @@ Process::~Process() {
         ::close(fd_in);
         ::close(fd_out);
 
+        kill(_pid, SIGKILL);
         waitpid(_pid, &status, 0);
 #ifdef DEBUG
         std::cerr << WEXITSTATUS(status) << std::endl;
