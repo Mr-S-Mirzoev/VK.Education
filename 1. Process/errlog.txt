@@ -1,0 +1,36 @@
+Test START
+lsa lsa
+Forked off successfully
+EXECVP failed
+PID: 447520
+Status: 65280
+Test END
+Test START
+ls ls
+Forked off successfully
+PID: 0
+Status: 1254889536
+0
+Test END
+Test START
+ls ls
+Forked off successfully
+PID: 0
+Status: 1254889536
+Read 441 bytes
+0
+Test END
+Test START
+lsa lsa
+Forked off successfully
+EXECVP failed
+PID: 447523
+Status: 65280
+Test END
+Test START
+cat cat
+Forked off successfully
+PID: 0
+Status: 1254890096
+Wrote 6 bytes
+Read 6 bytes
