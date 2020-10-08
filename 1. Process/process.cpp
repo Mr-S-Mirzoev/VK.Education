@@ -146,7 +146,9 @@ Process::~Process() {
 void Process::close() {
     if (!CHILD(_pid)) {
         ::close(fd_in);
+        fd_in = -1;
         ::close(fd_out);
+        fd_out = -1;
         kill(_pid, SIGINT);
     } else {
 #ifdef DEBUG
@@ -165,6 +167,9 @@ void Process::closeStdin() {
 }
 
 size_t Process::read(void* data, size_t len) {
+    if (POSIX_ERROR(fcntl(fd_in, F_GETFD))) 
+        throw std::runtime_error("Reading failed due to the fact file is closed.");
+
     size_t ret_val = ::read(fd_in, data, len);
 
     if (POSIX_ERROR(ret_val))
@@ -193,6 +198,9 @@ void Process::readExact(void* data, size_t len) {
 }
 
 size_t Process::write(const void* data, size_t len) {
+    if (POSIX_ERROR(fcntl(fd_out, F_GETFD))) 
+        throw std::runtime_error("Writing failed due to the fact file is closed.");
+
     size_t ret_val = ::write(fd_out, data, len);
 
     if (POSIX_ERROR(ret_val))
