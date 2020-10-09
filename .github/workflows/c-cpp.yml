@@ -12,6 +12,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: start
+      run: ls -R
     - name: build directory init
       run: mkdir build
       working-directory: ./"1. Process"
