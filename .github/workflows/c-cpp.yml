@@ -27,9 +27,6 @@ jobs:
       run: |
         rm -rf build
       working-directory: "./1. Process"
-    - name: show folder
-      run: ls -R
-      working-directory: "./"
   
   archive:
 
@@ -37,6 +34,9 @@ jobs:
     needs: build
 
     steps:
+    - name: show folder
+      run: ls -R
+      working-directory: "./"
     - name: Archive binaries
       uses: actions/upload-artifact@v2
       with:
