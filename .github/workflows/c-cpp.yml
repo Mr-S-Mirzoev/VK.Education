@@ -42,7 +42,7 @@ jobs:
       with:
         name: target-binaries
         path: |
-          "./1. Process/test"
-          "./1. Process/main"
+          "./test"
+          "./main"
     - name: Download all workflow run artifacts
       uses: actions/download-artifact@v2
