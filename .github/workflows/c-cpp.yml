@@ -12,15 +12,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: start
-      run: cd "1. Process"
     - name: build directory init
       run: mkdir build
-    - name: move to build folder
-      run: cd build
-    - name: whereami
-      run: pwd
+      working-directory: ./"1. Process"
     - name: cmake
       run: cmake ..
+      working-directory: ./"1. Process/build"
     - name: make
       run: make
+      working-directory: ./"1. Process/build"
