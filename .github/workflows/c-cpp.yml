@@ -13,31 +13,36 @@ jobs:
     steps:
     - name: start
       run: ls -R
+      uses: actions/checkout@v2
     - name: build directory init
       run: mkdir build
+      uses: actions/checkout@v2
       working-directory: "./1. Process"
     - name: building 
       run: |
         cmake ..
         make
         mv ./test ./main ..
+      uses: actions/checkout@v2
       working-directory: "./1. Process/build"
     - name: clean
       run: |
         rm -rf build
+      uses: actions/checkout@v2
       working-directory: "./1. Process"
     - name: show folder
       run: |
         ls -R
         ls -R ../..
         pwd
+      uses: actions/checkout@v2
       working-directory: "./"
     - name: Archive binaries
       uses: actions/upload-artifact@v2
       with:
         name: target-binaries
         path: |
-          "./test"
-          "./main"
+          "./1. Process/test"
+          "./1. Process/main"
     - name: Download all workflow run artifacts
       uses: actions/download-artifact@v2
