@@ -35,7 +35,10 @@ jobs:
 
     steps:
     - name: show folder
-      run: ls -R
+      run: |
+        ls -R
+        ls -R ..
+        pwd
       working-directory: "./"
     - name: Archive binaries
       uses: actions/upload-artifact@v2
