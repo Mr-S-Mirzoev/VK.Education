@@ -18,6 +18,8 @@ jobs:
       run: mkdir build
     - name: move to build folder
       run: cd build
+    - name: whereami
+      run: pwd
     - name: cmake
       run: cmake ..
     - name: make
