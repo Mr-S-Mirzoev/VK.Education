@@ -27,10 +27,16 @@ jobs:
       run: |
         rm -rf build
       working-directory: "./1. Process"
-    - name: Archive binaries
-        uses: actions/upload-artifact@v2
-        with:
-          name: target-binaries
-          path: |
-            ./1.\ Process/test
-            ./1.\ Process/main
+  
+  archive
+
+      runs-on: ubuntu-latest
+
+      steps:
+      - name: Archive binaries
+          uses: actions/upload-artifact@v2
+          with:
+            name: target-binaries
+            path: |
+              ./1.\ Process/test
+              ./1.\ Process/main
