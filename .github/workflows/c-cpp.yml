@@ -27,6 +27,9 @@ jobs:
       run: |
         rm -rf build
       working-directory: "./1. Process"
+    - name: show folder
+      run: ls -R
+      working-directory: "./"
   
   archive:
 
@@ -38,7 +41,7 @@ jobs:
         with:
           name: target-binaries
           path: |
-            ./1.\ Process/test
-            ./1.\ Process/main
+            "./1. Process/test"
+            "./1. Process/main"
       - name: Download all workflow run artifacts
         uses: actions/download-artifact@v2
