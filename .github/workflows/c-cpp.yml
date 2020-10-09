@@ -28,7 +28,7 @@ jobs:
         rm -rf build
       working-directory: "./1. Process"
   
-  archive
+  archive:
 
       runs-on: ubuntu-latest
 
