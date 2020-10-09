@@ -33,15 +33,16 @@ jobs:
   
   archive:
 
-      runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
+    needs: build
 
-      steps:
-      - name: Archive binaries
-        uses: actions/upload-artifact@v2
-        with:
-          name: target-binaries
-          path: |
-            "./1. Process/test"
-            "./1. Process/main"
-      - name: Download all workflow run artifacts
-        uses: actions/download-artifact@v2
+    steps:
+    - name: Archive binaries
+      uses: actions/upload-artifact@v2
+      with:
+        name: target-binaries
+        path: |
+          "./1. Process/test"
+          "./1. Process/main"
+    - name: Download all workflow run artifacts
+      uses: actions/download-artifact@v2
