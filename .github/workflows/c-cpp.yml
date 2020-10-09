@@ -11,7 +11,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
     - name: start
       run: ls -R
     - name: build directory init
@@ -33,12 +32,12 @@ jobs:
         ls -R ../..
         pwd
       working-directory: "./"
-    - uses: actions/upload-artifact@v2
     - name: Archive binaries
+      uses: actions/upload-artifact@v2
       with:
         name: target-binaries
         path: |
           "./test"
           "./main"
-    - uses: actions/download-artifact@v2
     - name: Download all workflow run artifacts
+      uses: actions/download-artifact@v2
