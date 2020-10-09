@@ -22,7 +22,8 @@ jobs:
       run: |
         cmake ..
         make
-        mv ./test ./main ~/
+        mkdir -p ~/new/artifact
+        cp ./test ./main ~/new/artifact
       working-directory: "./1. Process/build"
     - name: clean
       run: |
@@ -39,7 +40,7 @@ jobs:
       with:
         name: target-binaries
         path: |
-          "~/test"
-          "~/main"
+          "~/new/artifact/test"
+          "~/new/artifact/main"
     - name: Download all workflow run artifacts
       uses: actions/download-artifact@v2
