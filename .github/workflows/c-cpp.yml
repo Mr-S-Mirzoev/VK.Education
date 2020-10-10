@@ -6,9 +6,33 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  build-ubuntu:
 
     runs-on: ubuntu-latest
+
+    steps:
+    - name: init
+      uses: actions/checkout@v2
+    - name: start
+      run: ls -R
+    - name: build directory init
+      run: mkdir build
+      working-directory: "./1. Process"
+    - name: building 
+      run: |
+        cmake ..
+        make
+        mkdir -p ~/new/artifact
+        cp ./test ./main ~/new/artifact
+      working-directory: "./1. Process/build"
+    - name: clean
+      run: |
+        rm -rf build
+      working-directory: "./1. Process"
+
+  build-osx:
+
+    runs-on: macOS-latest
 
     steps:
     - name: init
