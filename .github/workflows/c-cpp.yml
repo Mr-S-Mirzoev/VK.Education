@@ -17,7 +17,7 @@ jobs:
       run: |
         cmake ..
         make
-        mkdir -p ~/new/artifact
+        mkdir -p ~/new/artifact/ubuntu
         cp ./test ./main ~/new/artifact/ubuntu
       working-directory: "./1. Process/build"
     - name: clean
@@ -46,7 +46,7 @@ jobs:
       run: |
         cmake ..
         make
-        mkdir -p ~/new/artifact
+        mkdir -p ~/new/artifact/osx
         cp ./test ./main ~/new/artifact/osx
       working-directory: "./1. Process/build"
     - name: clean
