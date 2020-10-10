@@ -29,18 +29,3 @@ jobs:
       run: |
         rm -rf build
       working-directory: "./1. Process"
-    - name: show folder
-      run: |
-        ls -R
-        ls -R ../..
-        pwd
-      working-directory: "./"
-    - name: Archive binaries
-      uses: actions/upload-artifact@v2
-      with:
-        name: target-binaries
-        path: |
-          "~/new/artifact/test"
-          "~/new/artifact/main"
-    - name: Download all workflow run artifacts
-      uses: actions/download-artifact@v2
