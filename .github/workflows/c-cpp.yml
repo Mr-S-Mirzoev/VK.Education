@@ -13,12 +13,10 @@ jobs:
     steps:
     - name: init
       uses: actions/checkout@v2
-    - name: start
-      run: ls -R
-    - name: build directory init
+    - shell: bash
       run: mkdir build
       working-directory: "./1. Process"
-    - name: building 
+    - shell: bash
       run: |
         cmake ..
         make
@@ -29,6 +27,11 @@ jobs:
       run: |
         rm -rf build
       working-directory: "./1. Process"
+    - name: Upload result for job
+        uses: actions/upload-artifact@v2
+        with:
+          name: binaries
+          path: ~/new/artifact/test
 
   build-osx:
 
