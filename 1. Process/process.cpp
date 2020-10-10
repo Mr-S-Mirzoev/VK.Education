@@ -5,6 +5,7 @@
 #include <iostream>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <signal.h>
 
 std::vector<char*> arg_list(const std::string &name, const std::vector <std::string>& args) {
     std::vector<char*> cstyle_args;
