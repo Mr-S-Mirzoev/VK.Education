@@ -28,7 +28,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: binaries
-        path: ~/new/artifact/ubuntu
+        path: ~/new/artifact/
 
   build-osx:
 
@@ -57,4 +57,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: binaries
-        path: ~/new/artifact/osx
+        path: ~/new/artifact/
