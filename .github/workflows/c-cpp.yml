@@ -1,10 +1,6 @@
 name: C/C++ CI
 
-on:
-  push:
-    [pipeline-artifacts]
-  pull_request:
-    [pipeline-artifacts]
+on: [push]
 
 jobs:
   build-ubuntu:
