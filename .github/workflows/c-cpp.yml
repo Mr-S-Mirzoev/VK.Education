@@ -29,10 +29,10 @@ jobs:
         rm -rf build
       working-directory: "./1. Process"
     - name: Upload result for job
-        uses: actions/upload-artifact@v2-preview
-        with:
-          name: binaries
-          path: ~/new/artifact/test
+      uses: actions/upload-artifact@v2
+      with:
+        name: binaries
+        path: ~/new/artifact/test
 
   build-osx:
 
