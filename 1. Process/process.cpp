@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <fcntl.h>
 #include <iostream>
+#include <sys/wait.h>
 #include <unistd.h>
 
 std::vector<char*> arg_list(const std::string &name, const std::vector <std::string>& args) {
@@ -24,7 +25,13 @@ std::string exec_name(const std::string& full_path) {
     return full_path.substr(pos + 1);
 }
 
+inline bool is_child(pid_t pid) {
+    return (pid == 0);
+}
 
+inline bool POSIX_ERROR(int ret_val) {
+    return (ret_val < 0);
+}
 
 
 
@@ -70,7 +77,7 @@ Process::Process(const std::string& path, const std::vector <std::string>& args)
 #endif 
     _pid = fork();
 
-    if (CHILD(_pid)) {
+    if (is_child(_pid)) {
 #ifdef DEBUG
         std::cerr << "Forked off successfully" << std::endl;
 #endif
@@ -118,22 +125,29 @@ Process::Process(const std::string& path, const std::vector <std::string>& args)
     std::cerr << "Status: " << status << std::endl;
 #endif
 
-    bool _noexec = (pid_result != 0);
-    if (_noexec)
-        throw(std::runtime_error("Execution of programm " + path + " failed"));
+    _fd_in = fd2[0];
+    _fd_out = fd1[1];
 
-    fd_in = fd2[0];
-    fd_out = fd1[1];
+    bool _noexec = (pid_result != 0);
+    if (_noexec) {
+        ::close(_fd_in);
+        _fd_in = -1;
+        ::close(_fd_out);
+        _fd_out = -1;
+        kill(_pid, SIGKILL);
+        throw(std::runtime_error("Execution of programm " + path + " failed"));
+    }
+
     //::close(fd2[1]);
     //::close(fd1[0]);
 }
 
 Process::~Process() {
-    if (!CHILD(_pid)) {
+    if (!is_child(_pid)) {
         int status;
 
-        ::close(fd_in);
-        ::close(fd_out);
+        ::close(_fd_in);
+        ::close(_fd_out);
 
         kill(_pid, SIGKILL);
         waitpid(_pid, &status, 0);
@@ -144,11 +158,11 @@ Process::~Process() {
 }
 
 void Process::close() {
-    if (!CHILD(_pid)) {
-        ::close(fd_in);
-        fd_in = -1;
-        ::close(fd_out);
-        fd_out = -1;
+    if (!is_child(_pid)) {
+        ::close(_fd_in);
+        _fd_in = -1;
+        ::close(_fd_out);
+        _fd_out = -1;
         kill(_pid, SIGINT);
     } else {
 #ifdef DEBUG
@@ -162,15 +176,15 @@ void Process::closeStdin() {
 #ifdef DEBUG
         std::cerr << "Trying to close Stdin from parent" << std::endl;
 #endif
-    if (!CHILD(_pid))
-        ::close(fd_out);
+    if (!is_child(_pid))
+        ::close(_fd_out);
 }
 
 size_t Process::read(void* data, size_t len) {
-    if (POSIX_ERROR(fcntl(fd_in, F_GETFD))) 
+    if (POSIX_ERROR(fcntl(_fd_in, F_GETFD))) 
         throw std::runtime_error("Reading failed due to the fact file is closed.");
 
-    size_t ret_val = ::read(fd_in, data, len);
+    size_t ret_val = ::read(_fd_in, data, len);
 
     if (POSIX_ERROR(ret_val))
         throw std::runtime_error("Reading data failed");
@@ -193,15 +207,18 @@ void Process::readExact(void* data, size_t len) {
 #ifdef DEBUG
         std::cerr << "Bytes read: " << bytes_read << std::endl;
 #endif
+        if (bytes_read == 0)
+            throw std::runtime_error("Error while reading");
+        
         offset += bytes_read;
     }
 }
 
 size_t Process::write(const void* data, size_t len) {
-    if (POSIX_ERROR(fcntl(fd_out, F_GETFD))) 
+    if (POSIX_ERROR(fcntl(_fd_out, F_GETFD))) 
         throw std::runtime_error("Writing failed due to the fact file is closed.");
 
-    size_t ret_val = ::write(fd_out, data, len);
+    size_t ret_val = ::write(_fd_out, data, len);
 
     if (POSIX_ERROR(ret_val))
         throw std::runtime_error("Writing failed");
