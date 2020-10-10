@@ -18,7 +18,7 @@ jobs:
         cmake ..
         make
         mkdir -p ~/new/artifact
-        cp ./test ./main ~/new/artifact
+        cp ./test ./main ~/new/artifact/ubuntu
       working-directory: "./1. Process/build"
     - name: clean
       run: |
@@ -28,7 +28,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: binaries
-        path: ~/new/artifact/test
+        path: ~/new/artifact/ubuntu
 
   build-osx:
 
@@ -47,9 +47,14 @@ jobs:
         cmake ..
         make
         mkdir -p ~/new/artifact
-        cp ./test ./main ~/new/artifact
+        cp ./test ./main ~/new/artifact/osx
       working-directory: "./1. Process/build"
     - name: clean
       run: |
         rm -rf build
       working-directory: "./1. Process"
+    - name: Upload result for job
+      uses: actions/upload-artifact@v2
+      with:
+        name: binaries
+        path: ~/new/artifact/osx
