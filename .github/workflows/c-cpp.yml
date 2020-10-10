@@ -32,7 +32,7 @@ jobs:
 
   build-osx:
 
-    runs-on: osx-latest
+    runs-on: macOS-latest
 
     steps:
     - name: init
