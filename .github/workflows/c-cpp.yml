@@ -1,9 +1,6 @@
 name: C/C++ CI
 
-on:
-  push:
-  pull_request:
-    branches: [ master ]
+on: [push]
 
 jobs:
   build-ubuntu:
@@ -13,22 +10,25 @@ jobs:
     steps:
     - name: init
       uses: actions/checkout@v2
-    - name: start
-      run: ls -R
-    - name: build directory init
+    - shell: bash
       run: mkdir build
       working-directory: "./1. Process"
-    - name: building 
+    - shell: bash
       run: |
         cmake ..
         make
-        mkdir -p ~/new/artifact
-        cp ./test ./main ~/new/artifact
+        mkdir -p ~/new/artifact/ubuntu
+        cp ./test ./main ~/new/artifact/ubuntu
       working-directory: "./1. Process/build"
     - name: clean
       run: |
         rm -rf build
       working-directory: "./1. Process"
+    - name: Upload result for job
+      uses: actions/upload-artifact@v2
+      with:
+        name: binaries
+        path: ~/new/artifact/
 
   build-osx:
 
@@ -46,10 +46,15 @@ jobs:
       run: |
         cmake ..
         make
-        mkdir -p ~/new/artifact
-        cp ./test ./main ~/new/artifact
+        mkdir -p ~/new/artifact/osx
+        cp ./test ./main ~/new/artifact/osx
       working-directory: "./1. Process/build"
     - name: clean
       run: |
         rm -rf build
       working-directory: "./1. Process"
+    - name: Upload result for job
+      uses: actions/upload-artifact@v2
+      with:
+        name: binaries
+        path: ~/new/artifact/
