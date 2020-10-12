@@ -11,8 +11,11 @@ namespace log {
     protected:
         Level _level;
         std::vector <Message> _text_log;
+        BaseLogger();
     public:
-        BaseLogger ();
+        static BaseLogger& getInstance();
+        ~BaseLogger();
+
         void debug(const std::string &message);
         void info(const std::string &message);
         void warning(const std::string &message);
@@ -21,6 +24,9 @@ namespace log {
         Level level();
         virtual void flush() = 0;
         void log(const std::string &message, Level level);
+    private:
+        static bool _instanceFlag;
+        static std::unique_ptr<BaseLogger> _ptr;
     };
 };
 

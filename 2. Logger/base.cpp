@@ -1,8 +1,16 @@
 #include "base.hpp"
+#include <stdexcept>
 
 namespace log {
+    BaseLogger& BaseLogger::getInstance () {
+        if (BaseLogger::_instanceFlag)
+            return *BaseLogger::_ptr;
+        else
+            throw std::logic_error("No instance of logger provided");
+    }
 
     BaseLogger::BaseLogger(): _level(NIL) {}
+    BaseLogger::~BaseLogger() {}
 
     void BaseLogger::debug(const std::string &message) {
         log(message, DEBUG);
