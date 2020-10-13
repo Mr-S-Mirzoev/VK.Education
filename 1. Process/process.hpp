@@ -5,8 +5,6 @@
 #include <sys/types.h>
 #include <vector>
 
-#define DEBUG
-
 class Process
 {
     pid_t _pid;

@@ -130,42 +130,44 @@ Process::Process(const std::string& path, const std::vector <std::string>& args)
     _fd_in = fd2[0];
     _fd_out = fd1[1];
 
-    bool _noexec = (pid_result != 0);
-    if (_noexec) {
+    bool noexec = (pid_result != 0);
+    if (noexec) {
         ::close(_fd_in);
         _fd_in = -1;
         ::close(_fd_out);
         _fd_out = -1;
         kill(_pid, SIGKILL);
+        waitpid(_pid, &status, 0);
         throw(std::runtime_error("Execution of programm " + path + " failed"));
     }
 
-    //::close(fd2[1]);
-    //::close(fd1[0]);
+    ::close(fd2[1]);
+    ::close(fd1[0]);
 }
 
 Process::~Process() {
-    if (!is_child(_pid)) {
-        int status;
+    int status;
 
-        ::close(_fd_in);
-        ::close(_fd_out);
+    ::close(_fd_in);
+    ::close(_fd_out);
 
-        kill(_pid, SIGKILL);
-        waitpid(_pid, &status, 0);
+    kill(_pid, SIGKILL);
+    waitpid(_pid, &status, 0);
 #ifdef DEBUG
-        std::cerr << WEXITSTATUS(status) << std::endl;
+    std::cerr << WEXITSTATUS(status) << std::endl;
 #endif
-    }
 }
 
 void Process::close() {
     if (!is_child(_pid)) {
+        int status;
+
         ::close(_fd_in);
         _fd_in = -1;
         ::close(_fd_out);
         _fd_out = -1;
         kill(_pid, SIGINT);
+        waitpid(_pid, &status, 0);
     } else {
 #ifdef DEBUG
         std::cerr << "Trying to kill softly from child" << std::endl;
@@ -183,7 +185,7 @@ void Process::closeStdin() {
 }
 
 size_t Process::read(void* data, size_t len) {
-    if (POSIX_ERROR(fcntl(_fd_in, F_GETFD))) 
+    if (_fd_in != -1) 
         throw std::runtime_error("Reading failed due to the fact file is closed.");
 
     size_t ret_val = ::read(_fd_in, data, len);

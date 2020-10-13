@@ -15,7 +15,8 @@ int main(int argc, char *argv[]) {
     }
     Process ps(path, args);
     std::string s(1000, '\0'); 
-    ps.read(s.data(), 1000);
+    size_t count = ps.read(s.data(), 1000);
+    s.resize(count);
     std::cout << s;
     return 0;
 }
