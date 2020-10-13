@@ -3,7 +3,15 @@ project(process VERSION 0.0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 
 # Make main executable
-add_executable(main main.cpp process.cpp)
+if(UNIX AND NOT APPLE)
+    add_executable(main main.cpp process.cpp)
+else()
+    add_executable(main main.cpp process.cpp pipe2_macos.cpp)
+endif()
 
 # Make test executable
-add_executable(test test.cpp process.cpp)
+if(UNIX AND NOT APPLE)
+    add_executable(test test.cpp process.cpp)
+else()
+    add_executable(test test.cpp process.cpp pipe2_macos.cpp)
+endif()
