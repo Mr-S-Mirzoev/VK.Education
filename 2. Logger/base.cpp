@@ -1,8 +1,11 @@
 #include "base.hpp"
+#include "tools.hpp"
 
 namespace log {
 
-    BaseLogger::BaseLogger(): _level(NIL) {}
+    BaseLogger::BaseLogger(): _level(NIL) {
+        pr_debug("BaseLogger()");
+    }
 
     void BaseLogger::debug(const std::string &message) {
         log(message, DEBUG);
@@ -30,5 +33,10 @@ namespace log {
 
     void BaseLogger::log(const std::string &message, Level level) {
         _text_log.push_back(Message(message, level));
+    }
+
+    void BaseLogger::flush() {}
+    BaseLogger::~BaseLogger() {
+        pr_debug("~BaseLogger()");
     }
 };

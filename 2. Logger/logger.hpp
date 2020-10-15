@@ -9,18 +9,16 @@ namespace log {
     {
     private:
         Logger();
-        static bool _has_instance;
-        static Logger *_instance;
+        static std::unique_ptr<Logger> _instance;
         static std::unique_ptr<BaseLogger> _global_logger;
-    public:
-        ~Logger();
         Logger(const Logger&) = delete;
         Logger& operator= (const Logger) = delete;
-    private:
-        static Logger& get_instance();
-        static void set_global_logger(BaseLogger);
+    public:
+        ~Logger();
+        static Logger* get_instance();
+        static void set_global_logger(BaseLogger *other);
         static BaseLogger* get_global_logger();
-    };    
+    };
 };
 
 #endif

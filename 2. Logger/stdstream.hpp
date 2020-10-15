@@ -8,12 +8,14 @@ namespace log {
     public:
         StdOutLogger ();
         void flush() override;
+        ~StdOutLogger () override;
     };
 
     class StdErrLogger: public BaseLogger {
     public:
         StdErrLogger ();
         void flush() override;
+        ~StdErrLogger () override;
     };
 };
 

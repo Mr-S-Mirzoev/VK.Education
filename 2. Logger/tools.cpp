@@ -1,4 +1,5 @@
 #include "tools.hpp"
+#include <iostream>
 
 namespace log {
 
@@ -52,5 +53,13 @@ namespace log {
 
     std::string Message::get_text() const {
         return _text;
+    }
+
+/* *** *** *** *** *** */
+
+    void pr_debug(const std::string &s) {
+        #ifndef NDEBUG
+        std::cerr << s << std::endl;
+        #endif
     }
 };
