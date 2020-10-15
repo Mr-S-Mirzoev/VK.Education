@@ -22,7 +22,8 @@ namespace log {
         void error(const std::string &message);
         void set_level(Level level);
         Level level();
-        virtual void flush() = 0;
+        virtual void flush();
+        virtual ~BaseLogger();
         void log(const std::string &message, Level level);
     private:
         static bool _instanceFlag;

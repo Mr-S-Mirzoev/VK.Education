@@ -1,16 +1,11 @@
 #include "base.hpp"
-#include <stdexcept>
+#include "tools.hpp"
 
 namespace log {
-    BaseLogger& BaseLogger::getInstance () {
-        if (BaseLogger::_instanceFlag)
-            return *BaseLogger::_ptr;
-        else
-            throw std::logic_error("No instance of logger provided");
-    }
 
-    BaseLogger::BaseLogger(): _level(NIL) {}
-    BaseLogger::~BaseLogger() {}
+    BaseLogger::BaseLogger(): _level(NIL) {
+        pr_debug("BaseLogger()");
+    }
 
     void BaseLogger::debug(const std::string &message) {
         log(message, DEBUG);
@@ -38,5 +33,10 @@ namespace log {
 
     void BaseLogger::log(const std::string &message, Level level) {
         _text_log.push_back(Message(message, level));
+    }
+
+    void BaseLogger::flush() {}
+    BaseLogger::~BaseLogger() {
+        pr_debug("~BaseLogger()");
     }
 };

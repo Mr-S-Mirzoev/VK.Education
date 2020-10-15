@@ -34,6 +34,8 @@ namespace log {
         Level get_level() const;
         std::string get_text() const;
     };
+
+    void pr_debug(const std::string &s);
 };
 
 #endif

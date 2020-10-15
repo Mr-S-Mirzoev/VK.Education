@@ -11,6 +11,7 @@ namespace log {
         FileLogger (std::ofstream &&file);
         FileLogger (const std::string &path);
         void flush() override;
+        ~FileLogger () override;
     };
 };
 
