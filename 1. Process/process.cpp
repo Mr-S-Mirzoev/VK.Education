@@ -8,31 +8,41 @@
 #include <unistd.h>
 #include <signal.h>
 
-std::vector<char*> arg_list(const std::string &name, const std::vector <std::string>& args) {
+static std::vector<char*> arg_list(std::string name, const std::vector <std::string>& args) {
+    std::vector<std::string> args_copy{args};
+    std::string name_copy{name};
     std::vector<char*> cstyle_args;
     cstyle_args.reserve(args.size() + 1);
 
-    cstyle_args.push_back(const_cast<char*>(name.c_str()));
-    for (auto &arg : args)
-        cstyle_args.push_back(const_cast<char*>(arg.c_str()));
+    cstyle_args.push_back(name_copy.data());
+    for (auto &arg : args_copy)
+        cstyle_args.push_back(arg.data());
     cstyle_args.push_back(nullptr);
     
     return cstyle_args;
 }
 
-std::string exec_name(const std::string& full_path) {
+static std::string exec_name(const std::string& full_path) {
     std::size_t pos = full_path.rfind('/');
     if (pos == std::string::npos)
         return full_path;
     return full_path.substr(pos + 1);
 }
 
-inline bool is_child(pid_t pid) {
-    return (pid == 0);
+static inline bool POSIX_ERROR(int ret_val) {
+    return (ret_val < 0);
 }
 
-inline bool POSIX_ERROR(int ret_val) {
-    return (ret_val < 0);
+static inline void pr_string_debug (const std::string &s) {
+#ifndef NDEBUG
+    std::cerr << s << std::endl;
+#endif
+}
+
+static inline void pr_inttype_debug (const std::string &s, int v) {
+#ifndef NDEBUG
+    std::cerr << s << v << std::endl;
+#endif
 }
 
 
@@ -47,17 +57,13 @@ Process::Process(const std::string& path, const std::vector <std::string>& args)
 
     ret = pipe2(fd1, 0);
     if (ret == -1) {
-#ifdef DEBUG
-        std::cerr << "Pipe1 initialization failed" << std::endl;
-#endif
+        pr_string_debug("Pipe1 initialization failed");
         return;
     }
 
     ret = pipe2(fd2, 0);
     if (ret == -1) {
-#ifdef DEBUG
-        std::cerr << "Pipe2 initialization failed" << std::endl;
-#endif
+        pr_string_debug("Pipe2 initialization failed");
         ::close(fd1[0]);
         ::close(fd1[1]);
         return;
@@ -74,15 +80,11 @@ Process::Process(const std::string& path, const std::vector <std::string>& args)
         return;
     }
 
-#ifdef DEBUG
-    std::cerr << path.c_str() << " " << exec_name(path).c_str() << std::endl;
-#endif 
+    pr_string_debug("Executing: " + path + " " + exec_name(path));
     _pid = fork();
 
-    if (is_child(_pid)) {
-#ifdef DEBUG
-        std::cerr << "Forked off successfully" << std::endl;
-#endif
+    if (_pid == 0) {
+        pr_string_debug("Forked off successfully");
 
         dup2(fd1[0], STDIN_FILENO);
         dup2(fd2[1], STDOUT_FILENO);
@@ -94,9 +96,7 @@ Process::Process(const std::string& path, const std::vector <std::string>& args)
 
         execvp(path.c_str(), arg_list(exec_name(path), args).data());
 
-#ifdef DEBUG
-        std::cerr << "EXECVP failed" << std::endl;
-#endif
+        pr_string_debug("EXECVP failed");
 
         exit(-1);
     } else if (POSIX_ERROR(_pid)) {
@@ -107,9 +107,7 @@ Process::Process(const std::string& path, const std::vector <std::string>& args)
         ::close(verif_fd[0]);
         ::close(verif_fd[1]);
 
-#ifdef DEBUG
-        std::cerr << "Forking off failed" << std::endl;
-#endif
+        pr_string_debug("Forking off failed");
 
         return;
     } else {
@@ -122,10 +120,8 @@ Process::Process(const std::string& path, const std::vector <std::string>& args)
 
     int status;
     pid_t pid_result = waitpid(_pid, &status, WNOHANG);
-#ifdef DEBUG
-    std::cerr << "PID: " << pid_result << std::endl;
-    std::cerr << "Status: " << status << std::endl;
-#endif
+    pr_inttype_debug("PID: ", pid_result);
+    pr_inttype_debug("Status: ", status);
 
     _fd_in = fd2[0];
     _fd_out = fd1[1];
@@ -153,51 +149,37 @@ Process::~Process() {
 
     kill(_pid, SIGKILL);
     waitpid(_pid, &status, 0);
-#ifdef DEBUG
-    std::cerr << WEXITSTATUS(status) << std::endl;
-#endif
+    pr_inttype_debug("Exit status of child process: ", WEXITSTATUS(status));
 }
 
 void Process::close() {
-    if (!is_child(_pid)) {
-        int status;
+    int status;
 
-        ::close(_fd_in);
-        _fd_in = -1;
-        ::close(_fd_out);
-        _fd_out = -1;
-        kill(_pid, SIGINT);
-        waitpid(_pid, &status, 0);
-    } else {
-#ifdef DEBUG
-        std::cerr << "Trying to kill softly from child" << std::endl;
-#endif
-        exit(1);
-    }
+    ::close(_fd_in);
+    _fd_in = -1;
+    ::close(_fd_out);
+    _fd_out = -1;
+    kill(_pid, SIGINT);
+    waitpid(_pid, &status, 0);
 }
 
 void Process::closeStdin() {
-#ifdef DEBUG
-        std::cerr << "Trying to close Stdin from parent" << std::endl;
-#endif
-    if (!is_child(_pid))
-        ::close(_fd_out);
+    pr_string_debug("Trying to close Stdin from parent");
+    ::close(_fd_out);
 }
 
 size_t Process::read(void* data, size_t len) {
-    if (_fd_in != -1) 
+    if (_fd_in == -1) 
         throw std::runtime_error("Reading failed due to the fact file is closed.");
 
     size_t ret_val = ::read(_fd_in, data, len);
 
     if (POSIX_ERROR(ret_val))
         throw std::runtime_error("Reading data failed");
-#ifdef DEBUG
     else if (!ret_val)
-        std::cerr << "Trying to read from a closed pipe" << std::endl;
+        pr_string_debug("Trying to read from a closed pipe");
     else
-        std::cerr << "Read " << ret_val << " bytes" << std::endl;
-#endif
+        pr_inttype_debug("Quantity of read bytes: ", ret_val);
 
     return ret_val;
 }
@@ -208,9 +190,7 @@ void Process::readExact(void* data, size_t len) {
     size_t offset = 0;
     while (offset < len) {
         size_t bytes_read = read(sized_data + offset, len);
-#ifdef DEBUG
-        std::cerr << "Bytes read: " << bytes_read << std::endl;
-#endif
+        pr_inttype_debug("Quantity of read bytes: ", bytes_read);
         if (bytes_read == 0)
             throw std::runtime_error("Error while reading");
         
@@ -227,9 +207,7 @@ size_t Process::write(const void* data, size_t len) {
     if (POSIX_ERROR(ret_val))
         throw std::runtime_error("Writing failed");
 
-#ifdef DEBUG
-    std::cerr << "Wrote " << ret_val << " bytes" << std::endl;
-#endif
+    pr_inttype_debug("Quantity of written bytes: ", ret_val);
 
     return ret_val;
 }
@@ -239,10 +217,8 @@ void Process::writeExact(const void* data, size_t len) {
     const char *sized_data = static_cast<const char *>(data);
     while (offset < len) {
         size_t bytes_written = write(sized_data + offset, len);
-#ifdef DEBUG
-        std::cerr << "Data: " << sized_data << std::endl;
-        std::cerr << "Bytes written: " << bytes_written << std::endl;
-#endif
+        pr_string_debug("Data: " + std::string(sized_data));
+        pr_inttype_debug("Bytes written: ", bytes_written);
         offset += bytes_written;
     }
 }

@@ -12,7 +12,7 @@
 
     mkdir build
     cd build
-    cmake ..
+    cmake .. -DCMAKE_BUILD_TYPE=Release
     make
     
   binaries "test" and "main" will be in build folder
