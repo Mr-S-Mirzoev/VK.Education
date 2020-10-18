@@ -94,7 +94,18 @@ Process::Process(const std::string& path, const std::vector <std::string>& args)
         ::close(fd2[0]);
         ::close(fd2[1]);
 
-        execvp(path.c_str(), arg_list(exec_name(path), args).data());
+        // Forming EXECVP arguments list:
+        std::string e_name = exec_name(path);
+        std::vector<std::string> arg_list_copy{args};
+        std::vector<char*> cstyle_args;
+        cstyle_args.reserve(args.size() + 1);
+
+        cstyle_args.push_back(e_name.data());
+        for (auto &arg : arg_list_copy)
+            cstyle_args.push_back(arg.data());
+        cstyle_args.push_back(nullptr);
+
+        execvp(path.c_str(), cstyle_args.data());
 
         pr_string_debug("EXECVP failed");
 
@@ -199,7 +210,7 @@ void Process::readExact(void* data, size_t len) {
 }
 
 size_t Process::write(const void* data, size_t len) {
-    if (POSIX_ERROR(fcntl(_fd_out, F_GETFD))) 
+    if (_fd_out == -1) 
         throw std::runtime_error("Writing failed due to the fact file is closed.");
 
     size_t ret_val = ::write(_fd_out, data, len);
