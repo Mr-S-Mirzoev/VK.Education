@@ -44,19 +44,6 @@ namespace log {
 
 /* *** *** *** *** *** */
 
-    Message::Message(const std::string &message, Level level): 
-        _text(message), _level(level) {}
-
-    Level Message::get_level() const {
-        return _level;
-    }
-
-    std::string Message::get_text() const {
-        return _text;
-    }
-
-/* *** *** *** *** *** */
-
     void pr_debug(const std::string &s) {
         #ifndef NDEBUG
         std::cerr << s << std::endl;

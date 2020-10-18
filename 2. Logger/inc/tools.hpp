@@ -26,15 +26,6 @@ namespace log {
         std::string to_string() const;
     };
 
-    class Message {
-        std::string _text;
-        Level _level;
-    public:
-        Message(const std::string &message, Level level);
-        Level get_level() const;
-        std::string get_text() const;
-    };
-
     void pr_debug(const std::string &s);
 };
 
