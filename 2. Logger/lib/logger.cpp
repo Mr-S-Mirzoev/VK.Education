@@ -32,6 +32,9 @@ namespace log {
         _global_logger->set_level(prevLevel);
     };
     BaseLogger* Logger::get_global_logger() {
-        return _global_logger.get(); // no except
+        if (_global_logger)
+            return _global_logger.get(); // no except
+        else
+            throw std::logic_error("No logger initialization took place.");
     }
 }

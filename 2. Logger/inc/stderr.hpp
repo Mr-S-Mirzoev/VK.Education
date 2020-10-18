@@ -1,20 +1,15 @@
-#ifndef STD_STREAM_H
-#define STD_STREAM_H
+#ifndef STD_ERROR_H
+#define STD_ERROR_H
 
 #include "base.hpp"
 
 namespace log {
-    class StdOutLogger: public BaseLogger {
-    public:
-        StdOutLogger ();
-        void flush() override;
-        ~StdOutLogger () override;
-    };
-
     class StdErrLogger: public BaseLogger {
+        void log(const std::string &message, Level level) override;
     public:
         StdErrLogger ();
         void flush() override;
+
         ~StdErrLogger () override;
     };
 };

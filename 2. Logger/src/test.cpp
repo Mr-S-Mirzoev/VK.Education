@@ -1,6 +1,7 @@
 #include "log_utils.hpp"
 #include "file.hpp"
-#include "stdstream.hpp"
+#include "stderr.hpp"
+#include "stdout.hpp"
 #include "test.hpp"
 
 int main() {

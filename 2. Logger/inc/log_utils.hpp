@@ -15,7 +15,6 @@ namespace log {
     void set_level(Level level);
     Level level();
     void flush();
-    void log(const std::string &message, Level level);
 }
 
 #endif

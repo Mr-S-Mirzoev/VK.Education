@@ -8,13 +8,14 @@ namespace log {
         pr_debug("FileLogger(path)");
     }
     void FileLogger::flush() {
-        for (auto &val : _text_log) {
-            if (_level.allowed(val.get_level())) {
-                _file << val.get_level().to_string() << " " << val.get_text() << std::endl;
-            }
-        }
-        _text_log.clear();
+        _file.flush();
     }
+    void FileLogger::log(const std::string &message, Level level) {
+        if (_level.allowed(level)) {
+            _file << level.to_string() << " " << message << std::endl;
+        }
+    }
+
     FileLogger::~FileLogger() {
         flush();
         pr_debug("~FileLogger()");

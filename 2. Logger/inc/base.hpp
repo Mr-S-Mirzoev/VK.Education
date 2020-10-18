@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "tools.hpp"
 
@@ -10,11 +11,9 @@ namespace log {
     class BaseLogger {
     protected:
         Level _level;
-        std::vector <Message> _text_log;
         BaseLogger();
     public:
         static BaseLogger& getInstance();
-        ~BaseLogger();
 
         void debug(const std::string &message);
         void info(const std::string &message);
@@ -22,10 +21,10 @@ namespace log {
         void error(const std::string &message);
         void set_level(Level level);
         Level level();
-        virtual void flush();
+        virtual void flush() = 0;
         virtual ~BaseLogger();
-        void log(const std::string &message, Level level);
     private:
+        virtual void log(const std::string &message, Level level) = 0;
         static bool _instanceFlag;
         static std::unique_ptr<BaseLogger> _ptr;
     };

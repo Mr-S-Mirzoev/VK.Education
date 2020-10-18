@@ -1,7 +1,8 @@
 #include "log_utils.hpp"
 #include "logger.hpp"
 #include "file.hpp"
-#include "stdstream.hpp"
+#include "stderr.hpp"
+#include "stdout.hpp"
 #include "tools.hpp"
 
 namespace log {
@@ -49,9 +50,5 @@ namespace log {
         pr_debug("log::flush");
         auto logger = log::Logger::get_instance();
         logger->get_global_logger()->flush();
-    }
-    void log(const std::string &message, Level level) {
-        auto logger = log::Logger::get_instance();
-        logger->get_global_logger()->log(message, level);
     }
 }
