@@ -1,9 +1,11 @@
 #ifndef SOCKET_H
 #define SOCKET_H
 
+#include "descriptor.hpp"
+
 namespace tcp {
     class Socket {
-        int _fd;
+        Descriptor _fd;
     public:
         Socket();
         int get_fd() const;

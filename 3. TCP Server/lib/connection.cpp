@@ -5,18 +5,13 @@ namespace tcp {
 
     Connection::Connection() = default;
 
-    Connection::Connection(std::string address, unsigned port) {
-        sockaddr_in addr{}; // no memset
-        addr.sin_family = AF_INET;
-        addr.sin_port = htons(port);
-        ::inet_aton(address.c_str(), &addr.sin_addr);
-    }
+    Connection::Connection(Address addr): _addr(addr) {}
 
     Connection::Connection(Connection &&con) = default;
     Connection& Connection::operator=(Connection &&con) {
         
     }
-    void Connection::connect(std::string addr, unsigned port) {
+    void Connection::connect(Address addr) {
 
     }
     void Connection::close();

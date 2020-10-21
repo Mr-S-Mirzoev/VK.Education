@@ -9,7 +9,7 @@ namespace tcp {
         Descriptor(int fd);
         Descriptor(Descriptor &&);
         void set_fd(int fd);
-        int get_fd();
+        int get_fd() const;
         void close();
     };
 };

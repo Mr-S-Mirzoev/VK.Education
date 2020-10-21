@@ -2,11 +2,9 @@
 #include <arpa/inet.h>
 
 namespace tcp {
-    Socket::Socket() {
-        _fd = ::socket(PF_INET, SOCK_STREAM, 0);
-    }
+    Socket::Socket(): _fd(::socket(PF_INET, SOCK_STREAM, 0)) {}
 
     int Socket::get_fd() const {
-        return _fd;
+        return _fd.get_fd();
     }
 };
