@@ -21,7 +21,8 @@ namespace tcp {
         Connection &operator=(const Connection &rhs) = delete;
     public:
         Connection();
-        Connection(Address &address);
+        Connection(const Address &addr);
+        Connection(const Address &addr, Descriptor &&d);
         Connection(Connection &&);
 
         Connection& operator=(Connection &&) noexcept; // move operator

@@ -7,22 +7,24 @@
 
 namespace tcp {
 
-    Connection::Connection(): _addr("127.0.0.1", 8888), _d(socket(AF_INET, SOCK_STREAM, 0)), _is_set(false) {}
-    Connection::Connection(Address &addr): _addr(addr), _d(socket(AF_INET, SOCK_STREAM, 0)), _is_set(true) {}
+    Connection::Connection(): _d(socket(AF_INET, SOCK_STREAM, 0)), _is_set(false) {}
+    Connection::Connection(const Address &addr): _addr(addr), _d(socket(AF_INET, SOCK_STREAM, 0)), _is_set(true) {}
+    Connection::Connection(const Address &addr, Descriptor &&d): _addr(addr), _d(std::move(d)), _is_set(true) {}
     Connection::Connection(Connection &&con): _addr(con._addr), _d(std::move(con._d)), _is_set(con._is_set) {
         con._is_set = false;
     }
 
-    Connection& Connection::operator=(Connection &&con) {
+    Connection& Connection::operator=(Connection &&con) noexcept {
         _addr = con._addr;
         _d = std::move(con._d);
         return *this;
     }
   
     void Connection::connect(Address addr) {
-        socklen_t sock_size = sizeof(addr.get_struct());
+        struct sockaddr_in *copy = new struct sockaddr_in (addr.get_struct());
+        socklen_t sock_size = sizeof(*copy);
         int ret_val = ::connect(_d.get_fd(), 
-                                reinterpret_cast<sockaddr*> (&addr.get_struct()), 
+                                reinterpret_cast<sockaddr*> (copy), 
                                 sock_size);
 
         if (ret_val != 0)

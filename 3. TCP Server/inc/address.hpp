@@ -4,6 +4,7 @@
 #include <string>
 #include <sys/types.h>
 #include <memory>
+#include <arpa/inet.h>
 
 namespace tcp {
     class Address
@@ -14,13 +15,14 @@ namespace tcp {
         int _port;
         struct sockaddr_in _addr {};
     public:
+        Address() noexcept;
         Address(const std::string &s_addr, int port) noexcept;
-        Address(Address &other) noexcept;
+        Address(const Address &other) noexcept;
 
-        std::string Address::to_string() const;
-        struct sockaddr_in get_struct() const;
-        
         ~Address() noexcept;
+
+        std::string to_string() const;
+        struct sockaddr_in get_struct() const;
     };
         
 }

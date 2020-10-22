@@ -5,7 +5,7 @@
 #include <unistd.h>
 
 namespace tcp {
-    Descriptor::Descriptor(int fd = -1): _fd(fd) {}
+    Descriptor::Descriptor(int fd): _fd(fd) {}
     Descriptor::Descriptor(Descriptor &&other): _fd(other._fd) {
         other._fd = -1;
     }
@@ -15,7 +15,7 @@ namespace tcp {
     }
 
     // Setter and getter
-    void Descriptor::set_fd(int fd) {
+    void Descriptor::set_fd(int fd) noexcept {
         _fd = fd;
     }
     int Descriptor::get_fd() const {
