@@ -3,13 +3,14 @@
 
 namespace tcp {
 
-    Connection::Connection() = default;
+    Connection::Connection(): _addr("127.0.0.1", 8888) {}
 
-    Connection::Connection(Address addr): _addr(addr) {}
+    Connection::Connection(Address &&addr): _addr(addr) {}
 
-    Connection::Connection(Connection &&con) = default;
+    Connection::Connection(Connection &&con): _addr(con._addr) {}
     Connection& Connection::operator=(Connection &&con) {
-        
+        _addr = con._addr;
+        _d = std::move(con._d);
     }
     void Connection::connect(Address addr) {
 

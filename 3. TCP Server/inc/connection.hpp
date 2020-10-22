@@ -12,7 +12,7 @@ namespace tcp {
         Address _addr;
     public:
         Connection();
-        Connection(Address address);
+        Connection(Address &&address);
         Connection(Connection &&);
         Connection& operator=(Connection &&);
         void connect(Address address);

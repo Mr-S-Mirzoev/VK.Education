@@ -14,10 +14,10 @@ namespace tcp {
         int _port;
         std::shared_ptr<struct sockaddr_in> _addr;
     public:
-        Address();
-        Address(const std::string &addr, int port);
-        struct sockaddr_in *get_struct();
-        ~Address();
+        Address(const std::string &s_addr, int port) noexcept;
+        Address(Address &other) noexcept;
+        struct sockaddr_in *get_struct() noexcept;
+        ~Address() noexcept;
     };
         
 }
