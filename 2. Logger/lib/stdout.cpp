@@ -4,14 +4,10 @@
 namespace log {
     StdOutLogger::StdOutLogger() {
         pr_debug("StdOutLogger()");
+        _outputter = &std::cout;
     }
     void StdOutLogger::flush() {
         std::cout.flush();
-    }
-    void StdOutLogger::log(const std::string &message, Level level) {
-        if (_level.allowed(level)) {
-            std::cout << level.to_string() << " " << message << std::endl;
-        }
     }
 
     StdOutLogger::~StdOutLogger () { 

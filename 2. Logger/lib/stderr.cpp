@@ -4,14 +4,10 @@
 namespace log {
     StdErrLogger::StdErrLogger() {
         pr_debug("StdErrLogger()");
+        _outputter = &std::cerr;
     }
     void StdErrLogger::flush() {
         std::cerr.flush();
-    }
-    void StdErrLogger::log(const std::string &message, Level level) {
-        if (_level.allowed(level)) {
-            std::cerr << level.to_string() << " " << message << std::endl;
-        }
     }
 
     StdErrLogger::~StdErrLogger() { 

@@ -3,17 +3,14 @@
 namespace log {
     FileLogger::FileLogger(std::ofstream &&file): _file(std::move(file)) {
         pr_debug("FileLogger(file)");
+        _outputter = (&_file);
     }
     FileLogger::FileLogger(const std::string &path): _file(path) {
         pr_debug("FileLogger(path)");
+        _outputter = (&_file);
     }
     void FileLogger::flush() {
         _file.flush();
-    }
-    void FileLogger::log(const std::string &message, Level level) {
-        if (_level.allowed(level)) {
-            _file << level.to_string() << " " << message << std::endl;
-        }
     }
 
     FileLogger::~FileLogger() {

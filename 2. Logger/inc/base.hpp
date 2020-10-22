@@ -10,8 +10,9 @@
 namespace log {
     class BaseLogger {
     protected:
-        Level _level;
+        int _level;
         BaseLogger();
+        std::ostream *_outputter;
     public:
         static BaseLogger& getInstance();
 
@@ -19,12 +20,12 @@ namespace log {
         void info(const std::string &message);
         void warning(const std::string &message);
         void error(const std::string &message);
-        void set_level(Level level);
-        Level level();
+        void set_level(int level);
+        int level();
         virtual void flush() = 0;
         virtual ~BaseLogger();
     private:
-        virtual void log(const std::string &message, Level level) = 0;
+        virtual void log(const std::string &message, const std::string &level_name, int level);
         static bool _instanceFlag;
         static std::unique_ptr<BaseLogger> _ptr;
     };

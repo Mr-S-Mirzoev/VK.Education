@@ -12,8 +12,8 @@ namespace log {
     void info(const std::string &message);
     void warning(const std::string &message);
     void error(const std::string &message);
-    void set_level(Level level);
-    Level level();
+    void set_level(int level);
+    int level();
     void flush();
 }
 

@@ -23,7 +23,7 @@ namespace log {
     }
 
     void Logger::set_global_logger(BaseLogger *other) {
-        Level prevLevel = NIL;
+        int prevLevel = ERROR;
         if (_global_logger) {
             _global_logger->flush();
             prevLevel = _global_logger->level();

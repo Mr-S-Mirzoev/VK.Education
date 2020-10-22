@@ -5,7 +5,6 @@
 
 namespace log {
     class StdErrLogger: public BaseLogger {
-        void log(const std::string &message, Level level) override;
     public:
         StdErrLogger ();
         void flush() override;
