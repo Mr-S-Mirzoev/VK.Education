@@ -5,11 +5,14 @@ namespace tcp {
     class Descriptor {
         int _fd;
     public:
-        Descriptor();
-        Descriptor(int fd);
-        Descriptor(Descriptor &&);
-        void set_fd(int fd);
+        Descriptor(Descriptor &&) = default;
+        Descriptor(int fd = -1);
+
+        void set_fd(int fd) noexcept;
         int get_fd() const;
+
+        bool broken() const noexcept;
+
         void close();
     };
 };

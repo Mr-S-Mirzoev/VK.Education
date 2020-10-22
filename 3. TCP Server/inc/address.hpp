@@ -12,12 +12,15 @@ namespace tcp {
         std::string _str_addr;
         int _address;
         int _port;
-        std::shared_ptr<struct sockaddr_in> _addr;
+        struct sockaddr_in _addr {};
     public:
-        Address();
+        Address() = default;
+        ~Address() = default;
+
         Address(const std::string &addr, int port);
-        struct sockaddr_in *get_struct();
-        ~Address();
+        
+        std::string Address::to_string() const;
+        struct sockaddr_in get_struct() const;
     };
         
 }
