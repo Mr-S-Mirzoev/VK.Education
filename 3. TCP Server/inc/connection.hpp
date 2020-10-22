@@ -8,16 +8,23 @@
 
 namespace tcp {
     class Connection {
-        Descriptor _d;
-        Address _addr;
+        Address _addr; // address to which we are connecting
+        Descriptor _d; // RAII class holding socket descriptor
+        bool _is_set;  // if not connected restrict operations until "connect" is called
+
+        /* 
+            We define copy constructor and assignment operator as deleted functions
+            as from the reason behind this class there cannot be two different connections
+            to the same address.
+        */
         Connection(const Connection &rhs) = delete;
         Connection &operator=(const Connection &rhs) = delete;
     public:
         Connection();
-        Connection(Address &&address);
+        Connection(Address &address);
         Connection(Connection &&);
 
-        Connection& operator=(Connection &&) noexcept;
+        Connection& operator=(Connection &&) noexcept; // move operator
 
         void connect(Address address);
         void close();

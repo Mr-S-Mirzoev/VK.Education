@@ -5,15 +5,29 @@
 #include <string>
 
 namespace tcp {
-    class BadDescriptorUsed: std::runtime_error {
+    class BadDescriptorUsed: public std::runtime_error {
     public:
-        BadDescriptorUsed(std::string s = "Trying to use broken or closed decriptor");
+        BadDescriptorUsed();
     };
     
-    class ConnectionFailed: std::runtime_error {
+    class ConnectionFailed: public std::runtime_error {
     public:
-        explicit ConnectionFailed(std::string addr, 
-            std::string s = "Connection failed. Address: ");
+        explicit ConnectionFailed(const std::string &addr);
+    };
+
+    class SocketClosed: public std::runtime_error {
+    public:
+        explicit SocketClosed(std::string s = "read");
+    };
+
+    class ReadFailed: public std::runtime_error {
+    public:
+        ReadFailed();
+    };
+
+    class WriteFailed: public std::runtime_error {
+    public:
+        WriteFailed();
     };
 };
 

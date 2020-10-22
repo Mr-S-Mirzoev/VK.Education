@@ -8,6 +8,7 @@ namespace tcp {
         int fd = ::socket(PF_INET, SOCK_STREAM, 0);
         if (fd == -1)
             std::cerr << "Socket creation failed" << std::endl;
+            
         _fd.set_fd(fd);
     }
 
