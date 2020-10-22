@@ -1,0 +1,60 @@
+name: C/C++ CI
+
+on: [push]
+
+jobs:
+  build-ubuntu:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: init
+      uses: actions/checkout@v2
+    - shell: bash
+      run: mkdir build
+      working-directory: "./1. Process"
+    - shell: bash
+      run: |
+        cmake ..
+        make
+        mkdir -p ~/new/artifact/ubuntu
+        cp ./test ./main ~/new/artifact/ubuntu
+      working-directory: "./1. Process/build"
+    - name: clean
+      run: |
+        rm -rf build
+      working-directory: "./1. Process"
+    - name: Upload result for job
+      uses: actions/upload-artifact@v2
+      with:
+        name: binaries
+        path: ~/new/artifact/
+
+  build-osx:
+
+    runs-on: macOS-latest
+
+    steps:
+    - name: init
+      uses: actions/checkout@v2
+    - name: start
+      run: ls -R
+    - name: build directory init
+      run: mkdir build
+      working-directory: "./1. Process"
+    - name: building 
+      run: |
+        cmake ..
+        make
+        mkdir -p ~/new/artifact/osx
+        cp ./test ./main ~/new/artifact/osx
+      working-directory: "./1. Process/build"
+    - name: clean
+      run: |
+        rm -rf build
+      working-directory: "./1. Process"
+    - name: Upload result for job
+      uses: actions/upload-artifact@v2
+      with:
+        name: binaries
+        path: ~/new/artifact/
