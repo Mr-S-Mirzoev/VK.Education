@@ -14,6 +14,7 @@ namespace tcp {
         Connection &operator=(const Connection &rhs) = delete;
     public:
         Connection();
+        Connection(Address &&address);
         Connection(Connection &&);
 
         Connection& operator=(Connection &&) noexcept;

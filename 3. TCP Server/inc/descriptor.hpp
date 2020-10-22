@@ -4,7 +4,9 @@
 namespace tcp {
     class Descriptor {
         int _fd;
+        Descriptor(Descriptor &) = delete;
     public:
+      
         Descriptor(Descriptor &&) = default;
         Descriptor(int fd = -1);
 
@@ -12,7 +14,7 @@ namespace tcp {
         int get_fd() const;
 
         bool broken() const noexcept;
-
+      
         void close();
     };
 };

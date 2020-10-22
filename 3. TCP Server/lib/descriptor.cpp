@@ -1,15 +1,17 @@
 #include "descriptor.hpp"
+
 #include "exceptions.hpp"
 
 #include <unistd.h>
 
 namespace tcp {
-    Descriptor::Descriptor(int fd): _fd(fd) {}
-
-    void Descriptor::set_fd(int fd) noexcept {
+    Descriptor::Descriptor(int fd = -1): _fd(fd) {}
+    Descriptor::Descriptor(Descriptor &&other): _fd(other._fd) {
+        other._fd = -1;
+    }
+    void Descriptor::set_fd(int fd) {
         _fd = fd;
     }
-
     int Descriptor::get_fd() const {
         if (broken())
             throw BadDescriptorUsed();
