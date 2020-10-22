@@ -12,7 +12,7 @@ namespace tcp {
         std::string _str_addr;
         int _address;
         int _port;
-        std::shared_ptr<struct sockaddr_in> _addr;
+        struct sockaddr_in _addr {};
     public:
         Address(const std::string &s_addr, int port) noexcept;
         Address(Address &other) noexcept;

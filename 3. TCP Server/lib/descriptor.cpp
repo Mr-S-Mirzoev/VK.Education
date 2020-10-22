@@ -1,5 +1,7 @@
 #include "descriptor.hpp"
 
+#include "exceptions.hpp"
+
 #include <unistd.h>
 
 namespace tcp {
@@ -11,11 +13,18 @@ namespace tcp {
         _fd = fd;
     }
     int Descriptor::get_fd() const {
+        if (broken())
+            throw BadDescriptorUsed();
         return _fd;
     }
+
+    bool Descriptor::broken() const noexcept {
+        return (_fd < 0);
+    }
+
     void Descriptor::close() {
-        if (is_open())
-            throw ;
+        if (broken())
+            throw BadDescriptorUsed();
 
         ::close(_fd);
         _fd = -1;

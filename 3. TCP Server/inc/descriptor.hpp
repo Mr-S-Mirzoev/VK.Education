@@ -6,11 +6,15 @@ namespace tcp {
         int _fd;
         Descriptor(Descriptor &) = delete;
     public:
-        Descriptor(int fd = -1) noexcept;
-        Descriptor(Descriptor &&) noexcept;
+      
+        Descriptor(Descriptor &&) = default;
+        Descriptor(int fd = -1);
+
         void set_fd(int fd) noexcept;
         int get_fd() const;
-        bool is_open() const;
+
+        bool broken() const noexcept;
+      
         void close();
     };
 };
