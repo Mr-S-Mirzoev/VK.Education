@@ -4,7 +4,7 @@
 namespace tcp {
     class Descriptor {
         int _fd;
-        Descriptor(Descriptor &) = delete;
+        Descriptor(const Descriptor &) = delete;
     public:
         Descriptor(Descriptor &&);
         Descriptor(int fd = -1);
@@ -12,7 +12,7 @@ namespace tcp {
 
         Descriptor& operator= (Descriptor &&) noexcept;
 
-        void set_fd(int fd) noexcept;
+        void set_fd(int fd);
         int get_fd() const;
 
         bool broken() const noexcept;

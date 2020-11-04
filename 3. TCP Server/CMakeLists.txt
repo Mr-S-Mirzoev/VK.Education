@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.8)
 
 # Project settings
-project(tcp_server VERSION 0.0.1 LANGUAGES CXX)
+project(tcp_server_test VERSION 0.0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_BUILD_TYPE Release)
 set(DIR ${CMAKE_CURRENT_SOURCE_DIR})

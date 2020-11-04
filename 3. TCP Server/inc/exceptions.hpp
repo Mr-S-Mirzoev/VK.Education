@@ -15,9 +15,14 @@ namespace tcp {
         explicit ConnectionFailed(const std::string &addr);
     };
 
-    class SocketClosed: public std::runtime_error {
+    class SocketClosedRead: public std::runtime_error {
     public:
-        explicit SocketClosed(std::string s = "read");
+        explicit SocketClosedRead();
+    };
+
+    class SocketClosedWrite: public std::runtime_error {
+    public:
+        explicit SocketClosedWrite();
     };
 
     class ReadFailed: public std::runtime_error {

@@ -1,8 +1,8 @@
 #include "descriptor.hpp"
-
 #include "exceptions.hpp"
 
 #include <unistd.h>
+#include <utility>
 
 namespace tcp {
     Descriptor::Descriptor(int fd): _fd(fd) {}
@@ -15,7 +15,9 @@ namespace tcp {
     }
 
     // Setter and getter
-    void Descriptor::set_fd(int fd) noexcept {
+    void Descriptor::set_fd(int fd) {
+        if (!broken())
+            close();
         _fd = fd;
     }
     int Descriptor::get_fd() const {
@@ -25,15 +27,16 @@ namespace tcp {
         return _fd;
     }
 
-    Descriptor& Descriptor::operator= (Descriptor &&other) noexcept {
-        _fd = other._fd;
-        other._fd = -1;
+    Descriptor& Descriptor::operator= (Descriptor &&other) {
+        if (!broken())
+            close();
+        _fd = std::exchange(other._fd, -1);
 
         return *this;
     }
 
     bool Descriptor::broken() const noexcept {
-        return (_fd < 0);
+        return _fd < 0;
     }
 
     void Descriptor::close() {

@@ -2,8 +2,6 @@
 #define ADDRESS_H
 
 #include <string>
-#include <sys/types.h>
-#include <memory>
 #include <arpa/inet.h>
 
 namespace tcp {
@@ -12,13 +10,11 @@ namespace tcp {
     private:
         std::string _str_addr;
         int _address;
-        int _port;
-        struct sockaddr_in _addr {};
+        short _port;
     public:
-        Address() noexcept;
         Address(const std::string &s_addr, int port) noexcept;
-        Address(const Address &other) noexcept;
-        Address(const struct sockaddr_in *struct_addr) noexcept;
+        Address(const Address &other);
+        Address(const ::sockaddr_in *struct_addr) noexcept;
 
         ~Address() noexcept;
 
