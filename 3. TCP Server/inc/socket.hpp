@@ -9,6 +9,7 @@ namespace tcp {
     public:
         Socket();
         int get_fd() const;
+        ~Socket();
     };
 };
 

@@ -67,7 +67,7 @@ namespace tcp {
     }
 
 
-    bool Server::is_open() const {
+    bool Server::is_open() const noexcept {
         return (!_d.broken());
     }
     void Server::close() {

@@ -15,4 +15,8 @@ namespace tcp {
     int Socket::get_fd() const {
         return _fd.get_fd();
     }
+
+    Socket::~Socket() {
+        _fd.close();
+    }
 };
