@@ -22,11 +22,10 @@ namespace log {
         void error(const std::string &message);
         void set_level(int level);
         int level();
-        virtual void flush() = 0;
+        void flush();
         virtual ~BaseLogger();
     private:
         virtual void log(const std::string &message, const std::string &level_name, int level);
-        static bool _instanceFlag;
         static std::unique_ptr<BaseLogger> _ptr;
     };
 };

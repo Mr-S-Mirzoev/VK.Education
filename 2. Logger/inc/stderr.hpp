@@ -7,8 +7,6 @@ namespace log {
     class StdErrLogger: public BaseLogger {
     public:
         StdErrLogger ();
-        void flush() override;
-
         ~StdErrLogger () override;
     };
 };

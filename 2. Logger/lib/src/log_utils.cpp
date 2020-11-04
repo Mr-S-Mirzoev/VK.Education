@@ -10,15 +10,18 @@ namespace log {
     void init_with_file_logger(const std::string &path) {
         pr_debug("log::init_with_file_logger");
         std::ofstream outFile(path);
-        log::Logger::get_instance()->set_global_logger(new FileLogger(std::move(outFile))); // noexcept
+        std::unique_ptr<log::BaseLogger> ptr {new FileLogger(std::move(outFile))};
+        log::Logger::get_instance()->set_global_logger(ptr); // noexcept
     }
     void init_with_stdout() {
         pr_debug("log::init_with_stdout");
-        log::Logger::get_instance()->set_global_logger(new StdOutLogger);
+        std::unique_ptr<log::BaseLogger> ptr {new StdOutLogger};
+        log::Logger::get_instance()->set_global_logger(ptr);
     }
     void init_with_stderr() {
         pr_debug("log::init_with_stderr");
-        log::Logger::get_instance()->set_global_logger(new StdErrLogger);
+        std::unique_ptr<log::BaseLogger> ptr {new StdErrLogger};
+        log::Logger::get_instance()->set_global_logger(ptr);
     }
     void debug(const std::string &message) {
         log::Logger::get_instance()->get_global_logger()->debug(message);

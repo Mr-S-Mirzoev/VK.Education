@@ -6,9 +6,6 @@ namespace log {
         pr_debug("StdErrLogger()");
         _outputter = &std::cerr;
     }
-    void StdErrLogger::flush() {
-        std::cerr.flush();
-    }
 
     StdErrLogger::~StdErrLogger() { 
         flush(); 

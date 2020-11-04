@@ -42,4 +42,8 @@ namespace log {
             *_outputter << level_name << " " << message << std::endl;
         }
     }
+
+    void BaseLogger::flush() {
+        _outputter->flush();
+    }
 };

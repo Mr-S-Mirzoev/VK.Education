@@ -9,9 +9,6 @@ namespace log {
         pr_debug("FileLogger(path)");
         _outputter = (&_file);
     }
-    void FileLogger::flush() {
-        _file.flush();
-    }
 
     FileLogger::~FileLogger() {
         flush();
