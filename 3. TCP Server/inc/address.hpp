@@ -18,8 +18,11 @@ namespace tcp {
         Address() noexcept;
         Address(const std::string &s_addr, int port) noexcept;
         Address(const Address &other) noexcept;
+        Address(const struct sockaddr_in *struct_addr) noexcept;
 
         ~Address() noexcept;
+
+        bool operator< (const Address &other) const noexcept;
 
         std::string to_string() const;
         struct sockaddr_in get_struct() const;

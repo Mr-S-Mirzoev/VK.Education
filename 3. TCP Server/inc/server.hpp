@@ -6,27 +6,20 @@
 #include "connection.hpp"
 #include <map>
 
-#ifndef SOMAXCONN
-#define SOMAXCONN 2
-#endif
-
 namespace tcp {
     class Server {
         Descriptor _d;
-        size_t _timeout;
-        bool _is_open;
-        bool _is_set;
         Address _addr;
-        std::map <Address, Descriptor> _clients;
         unsigned _max_con;
+        void listen (const int);
     public:
-        Server();
         Server(Server &&);
-        Server(std::string address, unsigned port, unsigned max_connection=SOMAXCONN);
+        Server(std::string address, unsigned port, unsigned max_con = SOMAXCONN);
 
         Server& operator= (Server &&);
 
-        void open(std::string address, unsigned port, unsigned max_connection=SOMAXCONN);
+        void open();
+        bool is_open() const noexcept;
         Connection accept();
         void close();
 
