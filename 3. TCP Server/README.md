@@ -1,1 +1,1 @@
-![alt text](https://github.com/Mr-S-Mirzoev/TechnoSphere/blob/task3-develop/Dependencies/tcp-connection.jpg)
+![alt text](https://github.com/Mr-S-Mirzoev/TechnoSphere/blob/task3-proto/Dependencies/tcp-connection.jpg)
