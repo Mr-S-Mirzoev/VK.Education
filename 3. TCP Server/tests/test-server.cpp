@@ -8,7 +8,7 @@
 #include "server.hpp"
 #include "exceptions.hpp"
 
-#define DEFAULT_PORT 90191
+#define DEFAULT_PORT 60606
 
 int main(int argc, char *argv[])
 {

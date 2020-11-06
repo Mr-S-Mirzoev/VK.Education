@@ -109,6 +109,6 @@ namespace tcp {
             std::cerr << "Set timeout error" << std::endl;
     }
     bool Connection::is_open() const noexcept {
-        return (!_sock.broken());
+        return (bool(_sock));
     }
-};
+} // namespace tcp

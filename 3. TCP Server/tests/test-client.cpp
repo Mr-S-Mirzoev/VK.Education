@@ -5,11 +5,11 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
-#include "socket.hpp"
+#include "descriptor.hpp"
 #include "exceptions.hpp"
 #include <iostream>
 
-#define DEFAULT_PORT 90191
+#define DEFAULT_PORT 60606
 
 //try to connect with server
 int SocketConnect(int hSocket, char *ServerAddress, int ServerPort)
@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
     char server_reply[200] = {0};
 
     //Create socket
-    tcp::Socket socket;
+    tcp::Descriptor socket = tcp::create_inet4_socket();
     std::cout << "Socket object initialised" << std::endl;
     try {
         hSocket = socket.get_fd();

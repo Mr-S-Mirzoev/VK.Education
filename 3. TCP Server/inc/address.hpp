@@ -8,24 +8,20 @@ namespace tcp {
     class Address
     {
     private:
-        std::string _str_addr;
-        int _address;
-        short _port;
-
+        in_addr_t _address;
+        uint16_t _port;
     public:
-        Address(const std::string &s_addr, int port) noexcept;
-        Address(const Address &other) noexcept;
-        Address(const ::sockaddr_in *struct_addr) noexcept;
+        Address(const std::string &s_addr, int port);
+        Address(const Address &other) = default;
+        Address(const ::sockaddr_in &struct_addr) noexcept;
 
-        ~Address() noexcept;
-
-        bool operator< (const Address &other) const noexcept;
+        ~Address() = default;
 
         std::string to_string() const;
-        struct sockaddr_in get_struct() const;
+        struct sockaddr_in get_struct() const noexcept;
     };
 
-    Address server_address(int port);
-}
+    Address any_address(int port);
+} // namespace tcp
 
 #endif

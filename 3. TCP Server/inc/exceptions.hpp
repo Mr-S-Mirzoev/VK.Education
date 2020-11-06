@@ -5,14 +5,36 @@
 #include <string>
 
 namespace tcp {
+    std::string last_error();
+
     class BadDescriptorUsed: public std::runtime_error {
     public:
         BadDescriptorUsed();
     };
+
+    class SocketNotCreated: public std::runtime_error {
+    public:
+        SocketNotCreated(const std::string&);
+    };
+
+    class AddressNotBuilt: public std::runtime_error {
+    public:
+        AddressNotBuilt(const std::string&);
+    };
+
+    class AddressBadPort: public AddressNotBuilt {
+    public:
+        AddressBadPort();
+    };
+
+    class AddressNotConverted: public AddressNotBuilt {
+    public:
+        AddressNotConverted();
+    };
     
     class ConnectionFailed: public std::runtime_error {
     public:
-        explicit ConnectionFailed(const std::string &addr);
+        explicit ConnectionFailed(const std::string&);
     };
 
     class SocketClosedRead: public std::runtime_error {
@@ -59,6 +81,6 @@ namespace tcp {
     public:
         ServerAcceptError();
     };
-};
+} // namespace tcp
 
 #endif

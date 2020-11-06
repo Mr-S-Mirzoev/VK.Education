@@ -6,7 +6,7 @@
 #define SOMAXCONN	4096
 
 namespace tcp {
-    Server::Server(int port, unsigned max_con): _listen_socket(),
+    Server::Server(int port, unsigned max_con): _listen_socket(std::move(create_inet4_socket())),
                                                 _max_con(max_con), 
                                                 _port(port) {
         bind();
@@ -33,7 +33,7 @@ namespace tcp {
         /* 
         Bind a name to a given socket at _port
         */
-        Address addr = server_address(_port);
+        Address addr = any_address(_port);
         auto *addr_struct = new ::sockaddr_in{addr.get_struct()};
         int ret = ::bind(_listen_socket.get_fd(), 
                     reinterpret_cast<sockaddr*> (addr_struct), 
@@ -51,7 +51,7 @@ namespace tcp {
                                         (struct sockaddr*) (&copy), 
                                         &client_size);
             std::cerr << "Ended" << std::endl;
-            Address new_client = &copy;
+            Address new_client = copy;
 
             if (client_sock < 0)
                 std::cout << "Can't accept" << std::endl;
@@ -86,4 +86,4 @@ namespace tcp {
             std::cerr << "Set timeout error" << std::endl;
         }
     }
-};
+} // namespace tcp

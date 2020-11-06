@@ -11,7 +11,7 @@
 int BindCreatedSocket(int hSocket)
 {
     int iRetval=-1;
-    int ClientPort = 90190;
+    int ClientPort = 60606;
     struct sockaddr_in  remote= {0};
     /* Internet address family */
     remote.sin_family = AF_INET;
