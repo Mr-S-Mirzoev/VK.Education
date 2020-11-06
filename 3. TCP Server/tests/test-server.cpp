@@ -5,89 +5,67 @@
 #include <unistd.h>
 #include <iostream>
 
-#include "socket.hpp"
+#include "server.hpp"
 #include "exceptions.hpp"
 
-int BindCreatedSocket(int hSocket)
-{
-    int iRetval=-1;
-    int ClientPort = 90190;
-    struct sockaddr_in  remote= {0};
-    /* Internet address family */
-    remote.sin_family = AF_INET;
-    /* Any incoming interface */
-    remote.sin_addr.s_addr = htonl(INADDR_ANY);
-    remote.sin_port = htons(ClientPort); /* Local port */
-    iRetval = bind(hSocket,(struct sockaddr *)&remote,sizeof(remote));
-    return iRetval;
-}
+#define DEFAULT_PORT 90191
 
 int main(int argc, char *argv[])
 {
     int socket_desc, sock, clientLen, read_size;
-    struct sockaddr_in server, client;
-    char client_message[200]= {0};
-    char message[100] = {0};
-    const char *pMessage = "Hello, Server";
-    //Create socket
-    tcp::Socket socket;
-    std::cout << "Socket object initialised" << std::endl;
+    std::string client_message;
+    std::string message;
+    const std::string pMessage = "Hello, Server";
+
+    //Create server
     try {
-        socket_desc = socket.get_fd();
+        tcp::Server server(DEFAULT_PORT);
+        std::cout << "Server object initialised, listening..." << std::endl;
+        //Accept all incoming connection
+        while(1)
+        {
+            std::cout << "Waiting for incoming connections..." << std::endl;
+
+            //accept connection from an incoming client
+            try {
+                tcp::Connection conn = server.accept();
+                std::cout << "Connection accepted" << std::endl;
+                
+                try {
+                    conn.read(client_message.data(), 200);
+                } catch (std::runtime_error &read_err) {
+                    std::cerr << "Read failed due to: " << read_err.what() << std::endl;
+                }
+
+                std::cout << "Client reply : " << client_message << std::endl;
+                if (pMessage == client_message)
+                    message = "Hi, there!";
+                else
+                    message = "Invalid Message. You can greet server with \"Hello, Server\"!";
+
+                try {
+                    conn.write(message.data(), message.size());
+                } catch (std::runtime_error &write_err) {
+                    std::cerr << "Write failed due to: " << write_err.what() << std::endl;
+                }
+            } catch (tcp::ServerAcceptError &acp) {
+                std::cout << "Failed to accpet client: " << acp.what() << std::endl;
+            } catch (std::exception &excp) {
+                std::cout << "Communication with client failed: " << excp.what() << std::endl;
+            }
+
+            ::sleep(1);
+        }
     } catch (tcp::BadDescriptorUsed &bdu) {
         std::cerr << "Could not create socket" << std::endl;
         std::cerr << bdu.what() << std::endl;
         return 1;
-    }
-    std::cout << "Socket created" << std::endl;
-    //Bind
-    if( BindCreatedSocket(socket_desc) < 0)
-    {
-        //print the error message
-        std::cerr << "bind failed." << std::endl;
-        return 1;
-    }
-    std::cout << "bind done" << std::endl;
-    //Listen
-    listen(socket_desc, 3);
-    //Accept and incoming connection
-    while(1)
-    {
-        std::cout << "Waiting for incoming connections..." << std::endl;
-        clientLen = sizeof(struct sockaddr_in);
-        //accept connection from an incoming client
-        sock = accept(socket_desc,(struct sockaddr *)&client,(socklen_t*)&clientLen);
-        if (sock < 0)
-        {
-            std::cerr << "accept failed" << std::endl;
-            return 1;
-        }
-        std::cout << "Connection accepted" << std::endl;
-        memset(client_message, '\0', sizeof client_message);
-        memset(message, '\0', sizeof message);
-        //Receive a reply from the client
-        if( recv(sock, client_message, 200, 0) < 0)
-        {
-            std::cerr << "recv failed" << std::endl;
-            break;
-        }
-        std::cout << "Client reply : " << client_message << std::endl;
-        if(strcmp(pMessage,client_message)==0)
-        {
-            strcpy(message,"Hi there !");
-        }
-        else
-        {
-            strcpy(message,"Invalid Message !");
-        }
-        // Send some data
-        if( send(sock, message, strlen(message), 0) < 0)
-        {
-            std::cerr << "Send failed" << std::endl;
-            return 1;
-        }
-        close(sock);
-        sleep(1);
+    } catch (tcp::ServerBindError &bnd) {
+        std::cerr << "Could not bind socket to designated port" << std::endl;
+        std::cerr << bnd.what() << std::endl;
+    } catch (tcp::ServerListenError &lst) {
+        std::cerr << "Could not listen through the created socket" << std::endl;
+        std::cerr << lst.what() << std::endl;
     }
     return 0;
 }

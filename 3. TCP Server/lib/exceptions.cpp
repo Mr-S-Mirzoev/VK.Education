@@ -21,4 +21,16 @@ namespace tcp {
 
     WriteFailed::WriteFailed():
         std::runtime_error("Writing failed.") {}
+
+    ServerError::ServerError(std::string s):
+        std::runtime_error(s) {}
+
+    ServerListenError::ServerListenError():
+        ServerError("Failed to start server (doen't listen)") {}
+
+    ServerBindError::ServerBindError(int port):
+        ServerError("Failed to start server at port: " + std::to_string(port)) {}
+
+    ServerAcceptError::ServerAcceptError():
+        ServerError("Failed to accept client.") {}
 }

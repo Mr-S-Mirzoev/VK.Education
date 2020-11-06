@@ -25,13 +25,12 @@ set(TEST_CLIENT ${TESTS_DIR}/test-client.cpp)
 set(TEST_SERVER ${TESTS_DIR}/test-server.cpp)
 add_subdirectory(${LIB_DIR})
 
-# Link test binary with our library.
-include_directories(${INC_DIR})
+# Build and link client.
 add_executable(${TARGET_CLIENT} ${TEST_CLIENT})
-add_executable(${TARGET_SERVER} ${TEST_SERVER})
-
 target_link_libraries(${TARGET_CLIENT} PUBLIC ${LIB_NAME})
-target_link_libraries(${TARGET_SERVER} PUBLIC ${LIB_NAME})
-
 target_include_directories(${TARGET_CLIENT} PUBLIC ${INC_DIR})
+
+# Build and link server.
+add_executable(${TARGET_SERVER} ${TEST_SERVER})
+target_link_libraries(${TARGET_SERVER} PUBLIC ${LIB_NAME})
 target_include_directories(${TARGET_SERVER} PUBLIC ${INC_DIR})

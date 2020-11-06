@@ -9,7 +9,7 @@
 #include "exceptions.hpp"
 #include <iostream>
 
-#define DEFAULT_PORT 90190
+#define DEFAULT_PORT 90191
 
 //try to connect with server
 int SocketConnect(int hSocket, char *ServerAddress, int ServerPort)
@@ -60,6 +60,7 @@ int main(int argc, char *argv[])
     struct sockaddr_in server;
     char SendToServer[100] = {0};
     char server_reply[200] = {0};
+
     //Create socket
     tcp::Socket socket;
     std::cout << "Socket object initialised" << std::endl;
@@ -71,6 +72,7 @@ int main(int argc, char *argv[])
         return 1;
     }
     std::cout << "Socket created" << std::endl;
+    
     //Connect to remote server
     if (SocketConnect(hSocket, "127.0.0.1", DEFAULT_PORT) < 0)
     {

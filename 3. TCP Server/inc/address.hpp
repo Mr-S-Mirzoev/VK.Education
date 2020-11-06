@@ -11,9 +11,10 @@ namespace tcp {
         std::string _str_addr;
         int _address;
         short _port;
+
     public:
         Address(const std::string &s_addr, int port) noexcept;
-        Address(const Address &other);
+        Address(const Address &other) noexcept;
         Address(const ::sockaddr_in *struct_addr) noexcept;
 
         ~Address() noexcept;
@@ -23,7 +24,8 @@ namespace tcp {
         std::string to_string() const;
         struct sockaddr_in get_struct() const;
     };
-        
+
+    Address server_address(int port);
 }
 
 #endif

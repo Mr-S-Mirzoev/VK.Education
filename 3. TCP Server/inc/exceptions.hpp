@@ -39,6 +39,26 @@ namespace tcp {
     public:
         WriteFailed();
     };
+
+    class ServerError: public std::runtime_error {
+    public:
+        ServerError(std::string s = "");
+    };
+
+    class ServerListenError: public ServerError {
+    public:
+        ServerListenError();
+    };
+
+    class ServerBindError: public ServerError {
+    public:
+        ServerBindError(int port);
+    };
+
+    class ServerAcceptError: public ServerError {
+    public:
+        ServerAcceptError();
+    };
 };
 
 #endif

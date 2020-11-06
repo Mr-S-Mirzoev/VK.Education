@@ -1,25 +1,24 @@
 #ifndef SERVER_H
 #define SERVER_H
 
-#include "descriptor.hpp"
+#include "socket.hpp"
 #include <string>
 #include "connection.hpp"
 #include <map>
 
 namespace tcp {
     class Server {
-        Descriptor _d;
-        Address _addr;
+        Socket _listen_socket;
+        int _port;
         unsigned _max_con;
-        void listen (const int);
+        void bind();
+        void listen ();
     public:
         Server(Server &&);
-        Server(std::string address, unsigned port, unsigned max_con = SOMAXCONN);
+        Server(int port, unsigned max_con = SOMAXCONN);
 
         Server& operator= (Server &&);
 
-        void open();
-        bool is_open() const noexcept;
         Connection accept();
         void close();
 

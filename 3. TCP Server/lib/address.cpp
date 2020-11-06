@@ -7,7 +7,8 @@ namespace tcp {
     Address::Address(const ::sockaddr_in *struct_addr) noexcept:
         _str_addr(::inet_ntoa(struct_addr->sin_addr)), 
         _port(struct_addr->sin_port) {}
-    Address::Address(const Address &other) = default;
+    Address::Address(const Address &other) noexcept {}
+
     Address::~Address() = default;
 
     bool Address::operator< (const Address &other) const noexcept {
@@ -25,5 +26,15 @@ namespace tcp {
             return addr;
         else
             throw ConnectionFailed(to_string());   
+    }
+
+    Address server_address(int port) {
+        ::sockaddr_in remote = {0};
+        /* Internet address family */
+        remote.sin_family = AF_INET;
+        /* Any incoming interface */
+        remote.sin_addr.s_addr = htonl(INADDR_ANY);
+        remote.sin_port = htons(port);
+        return Address(&remote);
     }
 }
