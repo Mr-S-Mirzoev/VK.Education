@@ -79,11 +79,9 @@ namespace tcp {
         timeval timeout{.tv_sec = ms, .tv_usec = 0};
         if (::setsockopt(_listen_socket.get_fd(),
                         SOL_SOCKET,
-                        SO_SNDTIMEO,
+                        SO_RCVTIMEO,
                         &timeout,
                         sizeof(timeout)) < 0)
-        {
-            std::cerr << "Set timeout error" << std::endl;
-        }
+            throw ServerTimeOutNotSet{};
     }
 } // namespace tcp

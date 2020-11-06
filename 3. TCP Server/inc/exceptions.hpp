@@ -57,11 +57,6 @@ namespace tcp {
         ReadFailed();
     };
 
-    class WriteFailed: public std::runtime_error {
-    public:
-        WriteFailed();
-    };
-
     class ServerError: public std::runtime_error {
     public:
         ServerError(std::string s = "");
@@ -80,6 +75,21 @@ namespace tcp {
     class ServerAcceptError: public ServerError {
     public:
         ServerAcceptError();
+    };
+
+    class ServerTimeOutNotSet: public ServerError {
+    public:
+        ServerTimeOutNotSet();
+    };
+
+    class ClientTimeOutNotSetRead: public std::runtime_error {
+    public:
+        ClientTimeOutNotSetRead();
+    };
+
+    class ClientTimeOutNotSetWrite: public std::runtime_error {
+    public:
+        ClientTimeOutNotSetWrite();
     };
 } // namespace tcp
 

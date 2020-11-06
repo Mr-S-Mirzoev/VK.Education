@@ -34,9 +34,6 @@ namespace tcp {
     ReadFailed::ReadFailed():
         std::runtime_error("Reading failed.") {}
 
-    WriteFailed::WriteFailed():
-        std::runtime_error("Writing failed.") {}
-
     ServerError::ServerError(std::string s):
         std::runtime_error(s) {}
 
@@ -48,4 +45,13 @@ namespace tcp {
 
     ServerAcceptError::ServerAcceptError():
         ServerError("Failed to accept client.") {}
+
+    ServerTimeOutNotSet::ServerTimeOutNotSet():
+        ServerError("Failed to set receive timeout for server.") {}
+
+    ClientTimeOutNotSetRead::ClientTimeOutNotSetRead():
+        std::runtime_error("Failed to set receive timeout for client.") {}
+
+    ClientTimeOutNotSetWrite::ClientTimeOutNotSetWrite():
+        std::runtime_error("Failed to set send timeout for client.") {}
 } // namespace tcp
