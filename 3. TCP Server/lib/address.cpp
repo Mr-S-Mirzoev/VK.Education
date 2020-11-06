@@ -3,7 +3,7 @@
 
 namespace tcp {
     Address::Address(const std::string &s_addr, int port):
-        _port(port) {
+        _port(htons(port)) {
         in_addr_t tmp = ::inet_network(s_addr.c_str());
 
         if (tmp == -1)
@@ -26,7 +26,7 @@ namespace tcp {
     ::sockaddr_in Address::get_struct() const noexcept {
         ::sockaddr_in addr {};
         addr.sin_family = AF_INET;
-        addr.sin_port = htons(_port);
+        addr.sin_port = _port;
         addr.sin_addr.s_addr = _address;
         return addr;
     }

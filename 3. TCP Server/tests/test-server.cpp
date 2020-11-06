@@ -4,6 +4,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <iostream>
+#include <string_view>
 
 #include "server.hpp"
 #include "exceptions.hpp"
@@ -13,13 +14,13 @@
 int main(int argc, char *argv[])
 {
     int socket_desc, sock, clientLen, read_size;
-    std::string client_message;
-    std::string message;
+    std::string client_message(200, 0);
+    std::string message(200, 0);
     const std::string pMessage = "Hello, Server";
 
     //Create server
     try {
-        tcp::Server server(DEFAULT_PORT);
+        tcp::Server server(DEFAULT_PORT, 3);
         std::cout << "Server object initialised, listening..." << std::endl;
         //Accept all incoming connection
         while(1)
@@ -30,9 +31,10 @@ int main(int argc, char *argv[])
             try {
                 tcp::Connection conn = server.accept();
                 std::cout << "Connection accepted" << std::endl;
-                
+                size_t read_bytes;
+
                 try {
-                    conn.read(client_message.data(), 200);
+                    read_bytes = conn.read(client_message.data(), 200);
                 } catch (std::runtime_error &read_err) {
                     std::cerr << "Read failed due to: " << read_err.what() << std::endl;
                 }

@@ -24,20 +24,18 @@ namespace tcp {
     }
 
     void Server::listen () {
-        if (::listen(_listen_socket.get_fd(), _max_con) < 0) {
+        if (::listen(_listen_socket.get_fd(), _max_con) < 0)
             throw ServerListenError();
-        }
     }
 
     void Server::bind() {
         /* 
         Bind a name to a given socket at _port
         */
-        Address addr = any_address(_port);
-        auto *addr_struct = new ::sockaddr_in{addr.get_struct()};
+        ::sockaddr_in remote = any_address(_port).get_struct();
         int ret = ::bind(_listen_socket.get_fd(), 
-                    reinterpret_cast<sockaddr*> (addr_struct), 
-                    sizeof(*addr_struct));
+                    reinterpret_cast<sockaddr*> (&remote), 
+                    sizeof(remote));
         if (ret < 0)
             throw ServerBindError(_port);
     }
@@ -46,7 +44,7 @@ namespace tcp {
         try {
             ::sockaddr_in copy {0};
             socklen_t client_size = sizeof(copy);
-            std::cerr << "Started accepting: " << _listen_socket.get_fd() << std::endl;
+            std::cerr << "Started accepting: " << std::endl;
             int client_sock = ::accept(_listen_socket.get_fd(), 
                                         (struct sockaddr*) (&copy), 
                                         &client_size);
