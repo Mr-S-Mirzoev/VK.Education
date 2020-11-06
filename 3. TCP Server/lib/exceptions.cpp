@@ -1,8 +1,23 @@
 #include "exceptions.hpp"
+#include <cerrno>
+#include <cstring>
 
 namespace tcp {
+    std::string last_error() {
+        return strerror(errno);
+    }
+
     BadDescriptorUsed::BadDescriptorUsed (): 
         std::runtime_error("Trying to use broken or closed decriptor") {}
+
+    SocketNotCreated::SocketNotCreated (const std::string& error_string):
+        std::runtime_error("Socket not created due to: " + error_string) {}
+
+    AddressNotBuilt::AddressNotBuilt(const std::string &s):
+        std::runtime_error(s) {}
+
+    AddressNotConverted::AddressNotConverted():
+        AddressNotBuilt("Address not built due to ") {}
 
     ConnectionFailed::ConnectionFailed (const std::string &addr): 
         std::runtime_error("Connection failed. Address: " + addr) {}
@@ -19,9 +34,6 @@ namespace tcp {
     ReadFailed::ReadFailed():
         std::runtime_error("Reading failed.") {}
 
-    WriteFailed::WriteFailed():
-        std::runtime_error("Writing failed.") {}
-
     ServerError::ServerError(std::string s):
         std::runtime_error(s) {}
 
@@ -33,4 +45,13 @@ namespace tcp {
 
     ServerAcceptError::ServerAcceptError():
         ServerError("Failed to accept client.") {}
-}
+
+    ServerTimeOutNotSet::ServerTimeOutNotSet():
+        ServerError("Failed to set receive timeout for server.") {}
+
+    ClientTimeOutNotSetRead::ClientTimeOutNotSetRead():
+        std::runtime_error("Failed to set receive timeout for client.") {}
+
+    ClientTimeOutNotSetWrite::ClientTimeOutNotSetWrite():
+        std::runtime_error("Failed to set send timeout for client.") {}
+} // namespace tcp
