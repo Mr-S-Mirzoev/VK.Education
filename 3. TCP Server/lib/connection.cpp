@@ -85,7 +85,7 @@ namespace tcp {
             while (offset < buf_len) {
                 size_t bytes_written = write(data + offset, buf_len);
                 std::cerr << "Data: " << std::string_view{data, bytes_written};
-                std::cerr << "Bytes written: " << bytes_written;
+                std::cerr << "Bytes written: " << bytes_written << std::endl;
                 offset += bytes_written;
             }
         } catch (SocketClosedWrite &e) {
@@ -112,5 +112,11 @@ namespace tcp {
     }
     bool Connection::is_open() const noexcept {
         return (bool(_sock));
+    }
+
+    Connection::~Connection() {
+        ::shutdown(_sock, SHUT_RD);
+        ::shutdown(_sock, SHUT_WR);
+        ::shutdown(_sock, SHUT_RDWR);
     }
 } // namespace tcp

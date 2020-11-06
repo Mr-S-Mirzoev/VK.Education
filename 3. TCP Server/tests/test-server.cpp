@@ -9,8 +9,6 @@
 #include "server.hpp"
 #include "exceptions.hpp"
 
-#define DEFAULT_PORT 60606
-
 int main(int argc, char *argv[])
 {
     int socket_desc, sock, clientLen, read_size;

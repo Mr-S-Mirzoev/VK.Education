@@ -4,7 +4,7 @@
 namespace tcp {
     Address::Address(const std::string &s_addr, int port):
         _port(htons(port)) {
-        in_addr_t tmp = ::inet_network(s_addr.c_str());
+        in_addr_t tmp = ::inet_addr(s_addr.c_str());
 
         if (tmp == -1)
             throw AddressNotConverted{};

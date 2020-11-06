@@ -21,6 +21,7 @@ namespace tcp {
         Connection(const Address &addr);
         Connection(const Address &addr, Descriptor &&d);
         Connection(Connection &&);
+        ~Connection();
 
         Connection& operator=(Connection &&) noexcept; // move operator
 

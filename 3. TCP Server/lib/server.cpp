@@ -74,7 +74,7 @@ namespace tcp {
     }
 
     void Server::set_timeout(size_t ms) {
-        timeval timeout{.tv_sec = ms, .tv_usec = 0};
+        timeval timeout{.tv_sec = 0, .tv_usec = ms};
         if (::setsockopt(_listen_socket.get_fd(),
                         SOL_SOCKET,
                         SO_RCVTIMEO,

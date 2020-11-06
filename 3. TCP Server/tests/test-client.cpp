@@ -5,11 +5,9 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
-#include "descriptor.hpp"
+#include "connection.hpp"
 #include "exceptions.hpp"
 #include <iostream>
-
-#define DEFAULT_PORT 60606
 
 //try to connect with server
 int SocketConnect(int hSocket, char *ServerAddress, int ServerPort)
@@ -62,35 +60,20 @@ int main(int argc, char *argv[])
     char server_reply[200] = {0};
 
     //Create socket
+    tcp::Address server_address {"127.0.0.1", DEFAULT_PORT};
+    std::cout << "Address created." << std::endl;
     tcp::Descriptor socket = tcp::create_inet4_socket();
-    std::cout << "Socket object initialised" << std::endl;
-    try {
-        hSocket = socket.get_fd();
-    } catch (tcp::BadDescriptorUsed &bdu) {
-        std::cerr << "Could not create socket" << std::endl;
-        std::cerr << bdu.what() << std::endl;
-        return 1;
-    }
-    std::cout << "Socket created" << std::endl;
-    
-    //Connect to remote server
-    if (SocketConnect(hSocket, "127.0.0.1", DEFAULT_PORT) < 0)
-    {
-        perror("connect failed.\n");
-        return 1;
-    }
+    std::cout << "Descriptor created." << std::endl;
+    tcp::Connection conn(server_address, std::move(socket));
+    std::cout << "Connection established." << std::endl;
+    conn.connect(server_address);
     printf("Sucessfully conected with server\n");
     printf("Enter the Message: ");
     fgets(SendToServer, 100, stdin);
-    SendToServer[strlen(SendToServer) - 1] = 0;
-    //Send data to the server
-    SocketSend(hSocket, SendToServer, strlen(SendToServer));
+    conn.writeExact(SendToServer, strlen(SendToServer));
     //Received the data from the server
-    read_size = SocketReceive(hSocket, server_reply, 200);
-    printf("Got a server reply. Finishing.\n");
-    close(hSocket);
-    shutdown(hSocket,0);
-    shutdown(hSocket,1);
-    shutdown(hSocket,2);
+    read_size = conn.read(server_reply, 200);
+    std::cout << "Got a server reply. Finishing." << std::endl;
+    std::cout << server_reply << std::endl;
     return 0;
 }
