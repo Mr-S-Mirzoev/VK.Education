@@ -10,7 +10,7 @@ namespace tcp {
         Descriptor(int fd = -1);
         ~Descriptor();
 
-        Descriptor& operator= (Descriptor &&) noexcept;
+        Descriptor& operator= (Descriptor &&);
 
         void set_fd(int fd);
         int get_fd() const;

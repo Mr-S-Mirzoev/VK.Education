@@ -2,12 +2,12 @@
 #include "exceptions.hpp"
 
 namespace tcp {
-    Address::Address(const std::string &s_addr, int port):
+    Address::Address(const std::string &s_addr, int port) noexcept:
         _str_addr(s_addr), _port(port) {}
     Address::Address(const ::sockaddr_in *struct_addr) noexcept:
         _str_addr(::inet_ntoa(struct_addr->sin_addr)), 
         _port(struct_addr->sin_port) {}
-
+    Address::Address(const Address &other) = default;
     Address::~Address() = default;
 
     bool Address::operator< (const Address &other) const noexcept {

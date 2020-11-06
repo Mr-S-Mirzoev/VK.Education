@@ -4,18 +4,13 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+
 #include "socket.hpp"
+#include "exceptions.hpp"
+#include <iostream>
 
 #define DEFAULT_PORT 90190
 
-//Create a Socket for server communication
-short SocketCreate(void)
-{
-    short hSocket;
-    printf("Create the socket\n");
-    hSocket = socket(AF_INET, SOCK_STREAM, 0);
-    return hSocket;
-}
 //try to connect with server
 int SocketConnect(int hSocket, char *ServerAddress, int ServerPort)
 {
@@ -66,13 +61,16 @@ int main(int argc, char *argv[])
     char SendToServer[100] = {0};
     char server_reply[200] = {0};
     //Create socket
-    hSocket = SocketCreate();
-    if(hSocket == -1)
-    {
-        printf("Could not create socket\n");
+    tcp::Socket socket;
+    std::cout << "Socket object initialised" << std::endl;
+    try {
+        hSocket = socket.get_fd();
+    } catch (tcp::BadDescriptorUsed &bdu) {
+        std::cerr << "Could not create socket" << std::endl;
+        std::cerr << bdu.what() << std::endl;
         return 1;
     }
-    printf("Socket is created\n");
+    std::cout << "Socket created" << std::endl;
     //Connect to remote server
     if (SocketConnect(hSocket, "127.0.0.1", DEFAULT_PORT) < 0)
     {

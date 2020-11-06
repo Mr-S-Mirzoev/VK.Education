@@ -7,8 +7,14 @@ namespace tcp {
     ConnectionFailed::ConnectionFailed (const std::string &addr): 
         std::runtime_error("Connection failed. Address: " + addr) {}
 
-    SocketClosed::SocketClosed(std::string s = "read"):
-        std::runtime_error("Socket is closed. Failed to " + s) {}
+    SocketClosedRead::SocketClosedRead():
+        std::runtime_error("Socket is closed. Failed to read.") {}
+
+    SocketClosedWrite::SocketClosedWrite():
+        std::runtime_error("Socket is closed. Failed to write.") {}
+
+    SocketClosedListen::SocketClosedListen():
+        std::runtime_error("Socket is closed. Failed to listen.") {}
 
     ReadFailed::ReadFailed():
         std::runtime_error("Reading failed.") {}

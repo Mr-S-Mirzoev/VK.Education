@@ -14,9 +14,7 @@ namespace tcp {
 
         _d.set_fd(fd);
     }
-    Server::Server(Server &&other) {
-        *this = std::move(other);
-    }
+    Server::Server(Server &&other): _addr(other._addr), _d(std::move(other._d)) {}
 
     Server& Server::operator= (Server &&other) {
         _d = std::move(other._d);
@@ -79,7 +77,7 @@ namespace tcp {
     void Server::listen(const int queue_size) {
         if (is_open()) {
             if (::listen(_d.get_fd(), queue_size) < 0) {
-                throw SocketClosed();
+                throw SocketClosedListen();
             }
         }
     }

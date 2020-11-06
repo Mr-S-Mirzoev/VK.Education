@@ -18,7 +18,6 @@ namespace tcp {
         Connection(const Connection &rhs) = delete;
         Connection &operator=(const Connection &rhs) = delete;
     public:
-        Connection();
         Connection(const Address &addr);
         Connection(const Address &addr, Descriptor &&d);
         Connection(Connection &&);

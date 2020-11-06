@@ -25,6 +25,11 @@ namespace tcp {
         explicit SocketClosedWrite();
     };
 
+    class SocketClosedListen: public std::runtime_error {
+    public:
+        explicit SocketClosedListen();
+    };
+
     class ReadFailed: public std::runtime_error {
     public:
         ReadFailed();
