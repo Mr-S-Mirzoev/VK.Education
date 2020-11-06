@@ -6,91 +6,78 @@
 #define SOMAXCONN	4096
 
 namespace tcp {
-    Server::Server(std::string address, unsigned port, unsigned max_con):
-        _addr(address, port), _max_con(max_con) {
-        int fd = ::socket(AF_INET, SOCK_STREAM, 0);
-        if(fd < 0) 
-            std::cerr << "Error while creating socket" << std::endl;
-
-        _d.set_fd(fd);
+    Server::Server(int port, unsigned max_con): _listen_socket(),
+                                                _max_con(max_con), 
+                                                _port(port) {
+        bind();
+        listen();
     }
-    Server::Server(Server &&other) {
-        *this = std::move(other);
-    }
+    Server::Server(Server &&other): _listen_socket(std::move(other._listen_socket)),
+                                    _port(other._port),
+                                    _max_con(other._max_con) {}
 
     Server& Server::operator= (Server &&other) {
-        _d = std::move(other._d);
-        _addr = other._addr;
+        _listen_socket = std::move(other._listen_socket);
         _max_con = other._max_con;
-
+        _port = other._port;
         return *this;
     }
 
-
-
-
-
-    void Server::open() {
-        if (!is_open())
-            throw BadDescriptorUsed();
-
-        struct sockaddr_in *copy = static_cast <struct sockaddr_in *> 
-            (new struct sockaddr_in);
-        *copy = _addr.get_struct();
-        socklen_t sock_size = sizeof(*copy);
-        if (::bind(_d.get_fd(), 
-                    reinterpret_cast<sockaddr*> (copy), 
-                    sock_size) < 0)
-            std::cerr << "Couldn't bind to the port" << std::endl;
-        else {
-            _addr = copy;
+    void Server::listen () {
+        if (::listen(_listen_socket.get_fd(), _max_con) < 0) {
+            throw ServerListenError();
         }
     }
+
+    void Server::bind() {
+        /* 
+        Bind a name to a given socket at _port
+        */
+        Address addr = server_address(_port);
+        auto *addr_struct = new ::sockaddr_in{addr.get_struct()};
+        int ret = ::bind(_listen_socket.get_fd(), 
+                    reinterpret_cast<sockaddr*> (addr_struct), 
+                    sizeof(*addr_struct));
+        if (ret < 0)
+            throw ServerBindError(_port);
+    }
+
     Connection Server::accept() {
-        listen(_max_con);
-        struct sockaddr_in *copy = new struct sockaddr_in;
-        socklen_t client_size = sizeof(*copy);
-        int client_sock = ::accept(_d.get_fd(), 
-                                reinterpret_cast<sockaddr*> (copy), 
-                                &client_size);
-        
-        Address new_client = copy;
+        try {
+            ::sockaddr_in copy {0};
+            socklen_t client_size = sizeof(copy);
+            std::cerr << "Started accepting: " << _listen_socket.get_fd() << std::endl;
+            int client_sock = ::accept(_listen_socket.get_fd(), 
+                                        (struct sockaddr*) (&copy), 
+                                        &client_size);
+            std::cerr << "Ended" << std::endl;
+            Address new_client = &copy;
 
-        if (client_sock < 0)
-            std::cout << "Can't accept" << std::endl;
+            if (client_sock < 0)
+                std::cout << "Can't accept" << std::endl;
 
-        Descriptor new_d(client_sock);
+            Descriptor new_d(client_sock);
 
-        std::cerr << "Client connected at: " << new_client.to_string() << std::endl;
-
-        return Connection(new_client, std::move(new_d));
-    }
-
-
-    bool Server::is_open() const {
-        return (!_d.broken());
-    }
-    void Server::close() {
-        if (is_open())
-            _d.close();
-    }
-
-
-    void Server::listen(const int queue_size) {
-        if (is_open()) {
-            if (::listen(_d.get_fd(), queue_size) < 0) {
-                throw SocketClosed();
-            }
+            std::cerr << "Client connected at: " << new_client.to_string() << std::endl;
+            return Connection(new_client, std::move(new_d));
+        } catch (...) {
+            throw ServerAcceptError();
         }
+    }
+
+    void Server::close() {
+        if (_listen_socket)
+            _listen_socket.close();
     }
 
     void Server::set_max_connection(unsigned max_connection) noexcept {
-        listen(max_connection);
         _max_con = max_connection;
+        listen();
     }
+
     void Server::set_timeout(size_t ms) {
         timeval timeout{.tv_sec = ms, .tv_usec = 0};
-        if (::setsockopt(_d.get_fd(),
+        if (::setsockopt(_listen_socket.get_fd(),
                         SOL_SOCKET,
                         SO_SNDTIMEO,
                         &timeout,

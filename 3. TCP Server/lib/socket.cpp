@@ -12,7 +12,24 @@ namespace tcp {
         _fd.set_fd(fd);
     }
 
+    Socket::Socket(Socket &&other): _fd(std::move(other._fd)) {}
+    Socket& Socket::operator=(Socket &&other) {
+        _fd = std::move(other._fd);
+    }
+
+    Socket::operator bool() const noexcept {
+        return !_fd.broken();
+    }
+
+    void Socket::close() {
+        _fd.close();
+    }
+
     int Socket::get_fd() const {
         return _fd.get_fd();
+    }
+
+    Socket::~Socket() {
+        _fd.close();
     }
 };

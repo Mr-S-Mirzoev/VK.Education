@@ -8,7 +8,16 @@ namespace tcp {
         Descriptor _fd;
     public:
         Socket();
+        Socket(Socket &&);
+
+        Socket& operator= (Socket &&);
+
         int get_fd() const;
+        operator bool() const noexcept;
+
+        void close();
+
+        ~Socket();
     };
 };
 

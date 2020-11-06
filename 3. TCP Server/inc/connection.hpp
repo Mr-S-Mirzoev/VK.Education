@@ -3,31 +3,28 @@
 
 #include "descriptor.hpp"
 #include "address.hpp"
-#include <cstddef>
 #include <string>
 
 namespace tcp {
     class Connection {
         Address _addr; // address to which we are connecting
-        Descriptor _d; // RAII class holding socket descriptor
-        bool _is_set;  // if not connected restrict operations until "connect" is called
+        Descriptor _sock; // RAII class holding socket descriptor
 
         /* 
             We define copy constructor and assignment operator as deleted functions
             as from the reason behind this class there cannot be two different connections
-            to the same address.
+            through the same socket.
         */
         Connection(const Connection &rhs) = delete;
         Connection &operator=(const Connection &rhs) = delete;
     public:
-        Connection();
         Connection(const Address &addr);
         Connection(const Address &addr, Descriptor &&d);
         Connection(Connection &&);
 
         Connection& operator=(Connection &&) noexcept; // move operator
 
-        void connect(Address address);
+        void connect(const Address &address);
         void close();
 
         size_t read(char *, size_t);
@@ -38,7 +35,6 @@ namespace tcp {
         void set_timeout(size_t ms);
         bool is_open() const noexcept;
     };
-};
-
+} // namespace tcp
 
 #endif

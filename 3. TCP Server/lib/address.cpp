@@ -1,21 +1,13 @@
 #include "address.hpp"
+#include "exceptions.hpp"
 
 namespace tcp {
-    Address::Address(const std::string &s_addr, int port):
-        _str_addr(s_addr), _port(port) {
-        _addr.sin_family = AF_INET;
-        _addr.sin_port = htons(_port);
-        ::inet_aton(s_addr.c_str(), &_addr.sin_addr);
-    }
-    Address::Address() noexcept: Address("127.0.0.1", 8888) {}
-    Address::Address(const Address &other) noexcept: 
-        _addr({other._addr}), _str_addr(other._str_addr), 
-        _port(other._port) {}
-    Address::Address(const struct sockaddr_in *struct_addr) noexcept:
+    Address::Address(const std::string &s_addr, int port) noexcept:
+        _str_addr(s_addr), _port(port) {}
+    Address::Address(const ::sockaddr_in *struct_addr) noexcept:
         _str_addr(::inet_ntoa(struct_addr->sin_addr)), 
-        _port(struct_addr->sin_port) {
-        _addr = *struct_addr;
-    }
+        _port(struct_addr->sin_port) {}
+    Address::Address(const Address &other) noexcept {}
 
     Address::~Address() = default;
 
@@ -26,7 +18,23 @@ namespace tcp {
     std::string Address::to_string() const {
         return _str_addr + ":" + std::to_string(_port);
     }
-    struct sockaddr_in Address::get_struct() const {
-        return _addr;
+    ::sockaddr_in Address::get_struct() const {
+        ::sockaddr_in addr {};
+        addr.sin_family = AF_INET;
+        addr.sin_port = htons(_port);
+        if (::inet_aton(_str_addr.c_str(), &addr.sin_addr))
+            return addr;
+        else
+            throw ConnectionFailed(to_string());   
+    }
+
+    Address server_address(int port) {
+        ::sockaddr_in remote = {0};
+        /* Internet address family */
+        remote.sin_family = AF_INET;
+        /* Any incoming interface */
+        remote.sin_addr.s_addr = htonl(INADDR_ANY);
+        remote.sin_port = htons(port);
+        return Address(&remote);
     }
 }
