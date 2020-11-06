@@ -23,16 +23,17 @@ set(TARGET_SERVER test-server)
 # Initialize test binary
 set(TEST_CLIENT ${TESTS_DIR}/test-client.cpp)
 set(TEST_SERVER ${TESTS_DIR}/test-server.cpp)
+set(DEFAULT_PORT 60606)
 add_subdirectory(${LIB_DIR})
 
 # Build and link client.
 add_executable(${TARGET_CLIENT} ${TEST_CLIENT})
 target_link_libraries(${TARGET_CLIENT} PUBLIC ${LIB_NAME})
 target_include_directories(${TARGET_CLIENT} PUBLIC ${INC_DIR})
-target_compile_definitions(${TARGET_CLIENT} PUBLIC DEFAULT_PORT=60600)
+target_compile_definitions(${TARGET_CLIENT} PUBLIC DEFAULT_PORT=${DEFAULT_PORT})
 
 # Build and link server.
 add_executable(${TARGET_SERVER} ${TEST_SERVER})
 target_link_libraries(${TARGET_SERVER} PUBLIC ${LIB_NAME})
 target_include_directories(${TARGET_SERVER} PUBLIC ${INC_DIR})
-target_compile_definitions(${TARGET_SERVER} PUBLIC DEFAULT_PORT=60600)
+target_compile_definitions(${TARGET_SERVER} PUBLIC DEFAULT_PORT=${DEFAULT_PORT})

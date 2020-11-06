@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
     int socket_desc, sock, clientLen, read_size;
     std::string client_message(200, 0);
     std::string message(200, 0);
-    const std::string pMessage = "Hello, Server";
+    const std::string pMessage = "Hello, Server!";
 
     //Create server
     try {
@@ -36,12 +36,15 @@ int main(int argc, char *argv[])
                 } catch (std::runtime_error &read_err) {
                     std::cerr << "Read failed due to: " << read_err.what() << std::endl;
                 }
+                
+                client_message.resize(read_bytes - 1);
 
                 std::cout << "Client reply : " << client_message << std::endl;
+                std::cout << client_message.size() << pMessage.size() << std::endl;
                 if (pMessage == client_message)
                     message = "Hi, there!";
                 else
-                    message = "Invalid Message. You can greet server with \"Hello, Server\"!";
+                    message = "Invalid Message. You can greet server with \"" + pMessage + "\"!";
 
                 try {
                     conn.write(message.data(), message.size());
