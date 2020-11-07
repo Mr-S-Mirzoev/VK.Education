@@ -16,16 +16,16 @@ namespace log {
     public:
         static BaseLogger& getInstance();
 
-        void debug(const std::string &message);
-        void info(const std::string &message);
-        void warning(const std::string &message);
-        void error(const std::string &message);
+        void debug(const std::string &message) const;
+        void info(const std::string &message) const;
+        void warning(const std::string &message) const;
+        void error(const std::string &message) const;
         void set_level(int level);
         int level();
         void flush();
         virtual ~BaseLogger();
     private:
-        virtual void log(const std::string &message, const std::string &level_name, int level);
+        virtual void log(const std::string &message, const std::string &level_name, int level) const;
         static std::unique_ptr<BaseLogger> _ptr;
     };
 };

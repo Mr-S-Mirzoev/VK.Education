@@ -8,7 +8,6 @@ namespace log {
     }
 
     StdErrLogger::~StdErrLogger() { 
-        flush(); 
         pr_debug("~StdErrLogger()");
     }
 }

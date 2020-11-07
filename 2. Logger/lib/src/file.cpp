@@ -11,7 +11,6 @@ namespace log {
     }
 
     FileLogger::~FileLogger() {
-        flush();
         pr_debug("~FileLogger()");
     }
 };

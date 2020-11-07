@@ -9,8 +9,7 @@ namespace log {
 
     void init_with_file_logger(const std::string &path) {
         pr_debug("log::init_with_file_logger");
-        std::ofstream outFile(path);
-        std::unique_ptr<log::BaseLogger> ptr {new FileLogger(std::move(outFile))};
+        std::unique_ptr<log::BaseLogger> ptr {new FileLogger(path)};
         log::Logger::get_instance()->set_global_logger(ptr); // noexcept
     }
     void init_with_stdout() {

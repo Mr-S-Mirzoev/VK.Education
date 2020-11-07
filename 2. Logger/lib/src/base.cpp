@@ -9,19 +9,19 @@ namespace log {
         pr_debug("BaseLogger()");
     }
 
-    void BaseLogger::debug(const std::string &message) {
+    void BaseLogger::debug(const std::string &message) const {
         log(message, "[debug] :", DEBUG);
     }
 
-    void BaseLogger::error(const std::string &message) {
+    void BaseLogger::error(const std::string &message) const {
         log(message, "[error] :", ERROR);
     }
 
-    void BaseLogger::info(const std::string &message) {
+    void BaseLogger::info(const std::string &message) const {
         log(message, "[info] :", INFO);
     }
 
-    void BaseLogger::warning(const std::string &message) {
+    void BaseLogger::warning(const std::string &message) const {
         log(message, "[warning] :", WARNING);
     }
 
@@ -37,7 +37,7 @@ namespace log {
         pr_debug("~BaseLogger()");
     }
 
-    void BaseLogger::log(const std::string &message, const std::string &level_name, int level) {
+    void BaseLogger::log(const std::string &message, const std::string &level_name, int level) const {
         if (_level <= level) {
             *_outputter << level_name << " " << message << std::endl;
         }
