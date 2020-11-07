@@ -61,13 +61,10 @@ int main(int argc, char *argv[])
 
     //Create socket
     tcp::Address server_address {"127.0.0.1", DEFAULT_PORT};
-    std::cout << "Address created." << std::endl;
     tcp::Descriptor socket = tcp::create_inet4_socket();
-    std::cout << "Descriptor created." << std::endl;
     tcp::Connection conn(server_address, std::move(socket));
-    std::cout << "Connection established." << std::endl;
     conn.connect(server_address);
-    printf("Sucessfully conected with server\n");
+    printf("Sucessfully conected to server\n");
     printf("Enter the Message: ");
     fgets(SendToServer, 100, stdin);
     conn.writeExact(SendToServer, strlen(SendToServer));

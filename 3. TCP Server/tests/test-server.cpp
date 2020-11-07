@@ -40,7 +40,6 @@ int main(int argc, char *argv[])
                 client_message.resize(read_bytes - 1);
 
                 std::cout << "Client reply : " << client_message << std::endl;
-                std::cout << client_message.size() << pMessage.size() << std::endl;
                 if (pMessage == client_message)
                     message = "Hi, there!";
                 else

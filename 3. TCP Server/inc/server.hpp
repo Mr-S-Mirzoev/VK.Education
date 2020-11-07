@@ -10,7 +10,7 @@ namespace tcp {
 
     class Server {
         Descriptor _listen_socket;
-        int _port;
+        uint16_t _port;
         unsigned _max_con;
         void bind();
         void listen ();

@@ -32,7 +32,7 @@ namespace tcp {
     }
 
     Address any_address(int port) {
-        ::sockaddr_in remote = {0};
+        ::sockaddr_in remote {};
         /* Internet address family */
         remote.sin_family = AF_INET;
         /* Any incoming interface */
