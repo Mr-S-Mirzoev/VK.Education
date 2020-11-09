@@ -58,9 +58,17 @@ int main(int argc, char *argv[])
     struct sockaddr_in server;
     char SendToServer[100] = {0};
     char server_reply[200] = {0};
+    short port;
+
+    constexpr short DEF_PORT = 6060;
+
+    if (argc >= 2)
+        port = std::stoi(argv[1]);
+    else
+        port = DEF_PORT;
 
     //Create socket
-    tcp::Address server_address {"127.0.0.1", DEFAULT_PORT};
+    tcp::Address server_address {"127.0.0.1", port};
     tcp::Descriptor socket = tcp::create_inet4_socket();
     tcp::Connection conn(server_address, std::move(socket));
     conn.connect(server_address);

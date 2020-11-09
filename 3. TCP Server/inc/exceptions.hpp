@@ -57,6 +57,11 @@ namespace tcp {
         ReadFailed();
     };
 
+    class WriteFailed: public std::runtime_error {
+    public:
+        WriteFailed();
+    };
+
     class ServerError: public std::runtime_error {
     public:
         ServerError(std::string s = "");

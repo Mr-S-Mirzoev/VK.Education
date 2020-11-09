@@ -23,7 +23,6 @@ set(TARGET_SERVER test-server)
 # Initialize test binary
 set(TEST_CLIENT ${TESTS_DIR}/test-client.cpp)
 set(TEST_SERVER ${TESTS_DIR}/test-server.cpp)
-set(DEFAULT_PORT 60606)
 add_subdirectory(${LIB_DIR})
 
 # Build and link client.

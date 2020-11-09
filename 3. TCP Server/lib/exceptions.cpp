@@ -34,6 +34,9 @@ namespace tcp {
     ReadFailed::ReadFailed():
         std::runtime_error("Reading failed.") {}
 
+    WriteFailed::WriteFailed():
+        std::runtime_error("Writing failed.") {}
+
     ServerError::ServerError(std::string s):
         std::runtime_error(s) {}
 

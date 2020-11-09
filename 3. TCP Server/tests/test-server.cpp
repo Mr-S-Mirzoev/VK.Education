@@ -11,14 +11,21 @@
 
 int main(int argc, char *argv[])
 {
+    constexpr short DEF_PORT = 6060;
     int socket_desc, sock, clientLen, read_size;
     std::string client_message(200, 0);
     std::string message(200, 0);
     const std::string pMessage = "Hello, Server!";
+    short port;
+
+    if (argc >= 2)
+        port = std::stoi(argv[1]);
+    else
+        port = DEF_PORT;
 
     //Create server
     try {
-        tcp::Server server(DEFAULT_PORT, 3);
+        tcp::Server server(port, 3);
         std::cout << "Server object initialised, listening..." << std::endl;
         //Accept all incoming connection
         while(1)

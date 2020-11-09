@@ -6,7 +6,8 @@
 #include "connection.hpp"
 
 namespace tcp {
-    const unsigned default_max_connection_count = 100;
+    /* Maximum queue length specifiable by listen.  */
+    constexpr unsigned MAX_POSSIBLE_CONNECTIONS = 100;
 
     class Server {
         Descriptor _listen_socket;
@@ -16,7 +17,7 @@ namespace tcp {
         void listen ();
     public:
         Server(Server &&);
-        Server(int port, unsigned max_con = default_max_connection_count);
+        Server(int port, unsigned max_con = MAX_POSSIBLE_CONNECTIONS);
 
         Server& operator= (Server &&);
 

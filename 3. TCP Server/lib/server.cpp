@@ -2,10 +2,8 @@
 #include "exceptions.hpp"
 #include <iostream>
 
-/* Maximum queue length specifiable by listen.  */
-#define SOMAXCONN	4096
-
 namespace tcp {
+
     Server::Server(int port, unsigned max_con): _listen_socket(std::move(create_inet4_socket())),
                                                 _max_con(max_con), 
                                                 _port(port) {
@@ -25,7 +23,7 @@ namespace tcp {
 
     void Server::listen () {
         if (::listen(_listen_socket.get_fd(), _max_con) < 0)
-            throw ServerListenError();
+            throw ServerListenError{};
     }
 
     void Server::bind() {
@@ -37,12 +35,12 @@ namespace tcp {
                     reinterpret_cast<sockaddr*> (&remote), 
                     sizeof(remote));
         if (ret < 0)
-            throw ServerBindError(_port);
+            throw ServerBindError{_port};
     }
 
     Connection Server::accept() {
         try {
-            ::sockaddr_in copy {0};
+            ::sockaddr_in copy {};
             socklen_t client_size = sizeof(copy);
             std::cerr << "Started accepting: " << std::endl;
             int client_sock = ::accept(_listen_socket.get_fd(), 
@@ -74,7 +72,7 @@ namespace tcp {
     }
 
     void Server::set_timeout(size_t ms) {
-        timeval timeout{.tv_sec = 0, .tv_usec = ms};
+        timeval timeout{.tv_sec = 0, .tv_usec = 1000 * ms};
         if (::setsockopt(_listen_socket.get_fd(),
                         SOL_SOCKET,
                         SO_RCVTIMEO,
