@@ -45,4 +45,6 @@
 
 # CMake build
 1. Process/build
+2. Logger/build/
+3. TCP Server/build/
 4. Shared Memory/build/

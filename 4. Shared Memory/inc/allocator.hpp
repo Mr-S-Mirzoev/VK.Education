@@ -1,3 +1,6 @@
+#ifndef ALLOCATOR_H
+#define ALLOCATOR_H
+
 #include <iostream>
 #include <memory>
 #include <cmath>
@@ -78,3 +81,5 @@ namespace shmem {
         return a.state_ != b.state_;
     }
 } // namespace shmem
+
+#endif //ALLOCATOR_H
