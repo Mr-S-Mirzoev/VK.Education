@@ -98,6 +98,6 @@ namespace tcp {
             throw ClientTimeOutNotSetRead{};
     }
     bool Connection::is_open() const noexcept {
-        return (bool(_sock));
+        return (static_cast<bool>(_sock));
     }
 } // namespace tcp

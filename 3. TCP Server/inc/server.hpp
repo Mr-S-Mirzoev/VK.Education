@@ -11,13 +11,14 @@ namespace tcp {
 
     class Server {
         Descriptor _listen_socket;
+        Address _address;
         uint16_t _port;
         unsigned _max_con;
         void bind();
         void listen ();
     public:
         Server(Server &&);
-        Server(int port, unsigned max_con = MAX_POSSIBLE_CONNECTIONS);
+        Server(const Address &addr, unsigned max_con = MAX_POSSIBLE_CONNECTIONS);
 
         Server& operator= (Server &&);
 

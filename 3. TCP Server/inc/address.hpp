@@ -11,6 +11,7 @@ namespace tcp {
         in_addr_t _address;
         uint16_t _port;
     public:
+        Address() = default; // To makeit possible to use address uninitialized.
         Address(const std::string &s_addr, int port);
         Address(const Address &other) = default;
         Address(const ::sockaddr_in &struct_addr) noexcept;

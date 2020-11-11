@@ -4,20 +4,20 @@
 
 namespace tcp {
 
-    Server::Server(int port, unsigned max_con): _listen_socket(std::move(create_inet4_socket())),
+    Server::Server(const Address &addr, unsigned max_con): _listen_socket(create_inet4_socket()),
                                                 _max_con(max_con), 
-                                                _port(port) {
+                                                _address(addr) {
         bind();
         listen();
     }
     Server::Server(Server &&other): _listen_socket(std::move(other._listen_socket)),
-                                    _port(other._port),
+                                    _address(other._address),
                                     _max_con(other._max_con) {}
 
     Server& Server::operator= (Server &&other) {
         _listen_socket = std::move(other._listen_socket);
         _max_con = other._max_con;
-        _port = other._port;
+        _address = other._address;
         return *this;
     }
 
@@ -30,7 +30,7 @@ namespace tcp {
         /* 
         Bind a name to a given socket at _port
         */
-        ::sockaddr_in remote = any_address(_port).get_struct();
+        ::sockaddr_in remote = _address.get_struct();
         int ret = ::bind(_listen_socket.get_fd(), 
                     reinterpret_cast<sockaddr*> (&remote), 
                     sizeof(remote));
@@ -56,7 +56,7 @@ namespace tcp {
 
             std::cerr << "Client connected at: " << new_client.to_string() << std::endl;
             return Connection(new_client, std::move(new_d));
-        } catch (...) {
+        } catch (BadDescriptorUsed) {
             throw ServerAcceptError();
         }
     }
@@ -67,8 +67,8 @@ namespace tcp {
     }
 
     void Server::set_max_connection(unsigned max_connection) noexcept {
-        _max_con = max_connection;
         listen();
+        _max_con = max_connection;
     }
 
     void Server::set_timeout(size_t ms) {

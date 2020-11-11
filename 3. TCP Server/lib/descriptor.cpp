@@ -63,6 +63,6 @@ namespace tcp {
         if (sock_no == -1) {
             throw SocketNotCreated(last_error());
         }
-        return std::move(Descriptor(sock_no));
+        return Descriptor(sock_no);
     }
 } // namespace tcp
