@@ -23,9 +23,11 @@ int main(int argc, char *argv[])
     else
         port = DEF_PORT;
 
+    tcp::Address server_address {"127.0.0.1", port};
+
     //Create server
     try {
-        tcp::Server server(port, 3);
+        tcp::Server server(server_address, 3);
         std::cout << "Server object initialised, listening..." << std::endl;
         //Accept all incoming connection
         while(1)
