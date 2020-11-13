@@ -3,7 +3,7 @@
 #include <iostream>
 
 namespace log {
-    Logger* Logger::_instance {nullptr};
+    Logger* const Logger::_instance {new Logger};
     std::unique_ptr<BaseLogger> Logger::_global_logger {nullptr};
 
     Logger::Logger(){
@@ -14,10 +14,9 @@ namespace log {
         pr_debug("~Logger()");
     }
 
-    Logger* Logger::get_instance() {
+    Logger* const Logger::get_instance() {
         if (Logger::_instance == nullptr) {
             pr_debug("No instance");
-            Logger::_instance = new Logger; // no except method
         }
         return Logger::_instance; // no except
     }
