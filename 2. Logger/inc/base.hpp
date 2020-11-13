@@ -26,7 +26,6 @@ namespace log {
         virtual ~BaseLogger();
     private:
         virtual void log(const std::string &message, const std::string &level_name, int level) const;
-        static std::unique_ptr<BaseLogger> _ptr;
     };
 };
 
