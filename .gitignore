@@ -45,3 +45,5 @@
 
 # CMake build
 1. Process/build
+3. TCP Server/build/
+3. TCP Server/lib/build/
