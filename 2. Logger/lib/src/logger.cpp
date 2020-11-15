@@ -4,9 +4,8 @@
 
 namespace log {
     Logger* const Logger::_instance {new Logger};
-    std::unique_ptr<BaseLogger> Logger::_global_logger {nullptr};
 
-    Logger::Logger(){
+    Logger::Logger(): _global_logger (nullptr) {
         pr_debug("Logger()");
     }
 
