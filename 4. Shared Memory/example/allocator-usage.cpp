@@ -1,4 +1,6 @@
 #include "allocator.hpp"
+#include "semaphore.hpp"
+#include "semlock.hpp"
 
 using CharAlloc = shmem::ShAlloc<char>;
 using ShString = std::basic_string<char, std::char_traits<char>, CharAlloc>;
@@ -33,7 +35,7 @@ int main()
 
     shmem::ShAlloc<ShString> alloc{state};
     ShString* string = new(alloc.allocate(1)) ShString{alloc};
-
+/*
     int fork = ::fork();
     if (fork == 0) {
         *string = "Hello from Child!";
@@ -41,6 +43,18 @@ int main()
     }
     ::waitpid(fork, nullptr, 0);
     std::cout << *string << std::endl;
+*/
+    shmem::Semaphore s;
 
+    s.lock();
+
+    if (::fork() == 0) {
+        std::cout << "C" << std::endl;
+        *string = "Hello from brother";
+        s.unlock();
+    } else {
+        std::cout << "F" << std::endl;
+        std::cout << *string << std::endl;
+    }
     return 0;
 }

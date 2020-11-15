@@ -1,4 +1,5 @@
-#ifndef EXCEPTIONS_H
-#define EXCEPTIONS_H
+#include "exceptions.hpp"
 
-#endif // EXCEPTIONS_H
+namespace shmem {
+
+} // namespace shmem

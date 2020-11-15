@@ -1,4 +1,7 @@
-#ifndef SEMLOCK_H
-#define SEMLOCK_H
+#include "semlock.hpp"
 
-#endif // SEMLOCK_H
+namespace shmem {
+
+    SemLock::SemLock(Semaphore &sem): _threshold(sem) {}
+
+} // namespace shmem
