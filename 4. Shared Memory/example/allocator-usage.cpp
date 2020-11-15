@@ -43,16 +43,15 @@ int main()
     }
     ::waitpid(fork, nullptr, 0);
     std::cout << *string << std::endl;
-*/
+*/  
     shmem::Semaphore s;
-
-    s.lock();
 
     if (::fork() == 0) {
         std::cout << "C" << std::endl;
-        *string = "Hello from brother";
+        *string = "Hello from child";
         s.unlock();
     } else {
+        s.lock();
         std::cout << "F" << std::endl;
         std::cout << *string << std::endl;
     }

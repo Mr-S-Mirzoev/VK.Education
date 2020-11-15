@@ -2,11 +2,13 @@
 #define SEMAPHORE_H
 
 #include <semaphore.h>
+#include "allocator.hpp"
+#include "mmap_wrapper.hpp"
 
 namespace shmem {
 
     class Semaphore {
-        ::sem_t _value;
+        MMapWrapper <::sem_t> _value;
     public:
         Semaphore();
         ~Semaphore();

@@ -1,21 +1,27 @@
 #include "semaphore.hpp"
+#include "exceptions.hpp"
 
 namespace shmem {
 
-    Semaphore::Semaphore() {
-        ::sem_init(&_value, 1, 1);
+    Semaphore::Semaphore(): _value(sizeof(::sem_t)) {
+        if (::sem_init(_value.get_addr(), 0, 1) == -1)
+            throw SemaphoreError{errno};
     }
 
     Semaphore::~Semaphore() {
-        ::sem_destroy(&_value);
+        if (::sem_destroy(_value.get_addr()) == -1) 
+            throw SemaphoreError(errno);
+
     }
 
     void Semaphore::unlock() {
-        ::sem_post(&_value);
+        if (::sem_post(_value.get_addr()) == -1)
+            throw SemaphoreError(errno);
     }
 
     void Semaphore::lock() {
-        ::sem_wait(&_value);
+        if (::sem_wait(_value.get_addr()) == -1)
+            throw SemaphoreError(errno);
     }
 
 } // namespace shmem
