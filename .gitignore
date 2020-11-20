@@ -43,7 +43,7 @@
 # Local History for Visual Studio Code
 .history/
 
-# Build directories.
+# CMake build directories.
 *build/
 
 # Logger test output files
