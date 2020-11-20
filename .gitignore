@@ -43,7 +43,9 @@
 # Local History for Visual Studio Code
 .history/
 
-# CMake build
-1. Process/build
-3. TCP Server/build/
-3. TCP Server/lib/build/
+# CMake build directories.
+*build/
+
+# Logger test output files
+2. Logger/test0-log.txt
+2. Logger/test4-log.txt
