@@ -4,7 +4,7 @@
 namespace shmem {
 
     Semaphore::Semaphore(): _value(sizeof(::sem_t)) {
-        if (::sem_init(_value.get_addr(), 0, 1) == -1)
+        if (::sem_init(_value.get_addr(), 1, 1) == -1)
             throw SemaphoreError{errno};
     }
 

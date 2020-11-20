@@ -9,7 +9,7 @@ namespace shmem {
         Semaphore &_threshold;
     public:
         SemLock(Semaphore &threshold);
-        ~SemLock() = default;
+        ~SemLock();
     };
     
 }

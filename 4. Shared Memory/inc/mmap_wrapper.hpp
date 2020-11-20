@@ -13,18 +13,21 @@ namespace shmem
         ::size_t _length;
         void *_addr;
     public:
-        MMapWrapper(::size_t bytes_count) {
-            if (::mmap( nullptr, 
-                        bytes_count, 
-                        PROT_READ | PROT_WRITE, 
-                        MAP_SHARED | MAP_ANONYMOUS, 
-                        -1, 
-                        0) == MAP_FAILED)
+        MMapWrapper(::size_t bytes_count): _addr(nullptr) {
+            void *addr = ::mmap(nullptr, 
+                                bytes_count, 
+                                PROT_READ | PROT_WRITE, 
+                                MAP_SHARED | MAP_ANONYMOUS, 
+                                -1, 
+                                0);
+            if (addr == MAP_FAILED)
                 throw MMapInitError(errno);
+            
+            _addr = addr;
         }
         ~MMapWrapper() {
             if (::munmap(_addr, _length) == -1)
-            throw MMapDeInitError(errno);
+                throw MMapDeInitError(errno);
         }
 
         T *get_addr() const {

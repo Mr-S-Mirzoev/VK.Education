@@ -16,7 +16,7 @@ int main()
                         MAP_ANONYMOUS | MAP_SHARED,
                         -1, 0);
 
-    if(mmap == MAP_FAILED) {
+    if (mmap == MAP_FAILED) {
         std::cerr << "Failed to create shared map" << std::endl;
         return 1;
     }
@@ -45,13 +45,13 @@ int main()
     std::cout << *string << std::endl;
 */  
     shmem::Semaphore s;
+    shmem::SemLock lock(s);
 
     if (::fork() == 0) {
         std::cout << "C" << std::endl;
         *string = "Hello from child";
-        s.unlock();
     } else {
-        s.lock();
+        shmem::SemLock lock2(s);
         std::cout << "F" << std::endl;
         std::cout << *string << std::endl;
     }
