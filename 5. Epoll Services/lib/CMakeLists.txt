@@ -9,11 +9,11 @@ set(INCLUDE_DIR ${CURRENT_DIR}/../inc)
 set(LIBRARY_DIR ${CURRENT_DIR})
 
 set(TCP_LIB_NAME tcp-server)
-set(TCP_DIR "${CURRENT_DIR}/../../3. TCP Server/lib")
+set(TCP_DIR ${CURRENT_DIR}/dep/lib)
 set(TCP_INC ${TCP_DIR}/../inc)
 
 # Build Server and Client
-find_library(${TCP_LIB_NAME})
+add_subdirectory(${TCP_DIR})
 
 # Set the list of source files.
 set(LIB ${LIBRARY_DIR}/buff_conn.cpp
